@@ -1,1 +1,1 @@
-<h1>Sistema wen de asistencia para la UCSM</h1>
+<h1>Sistema web de asistencia para la UCSM</h1>
