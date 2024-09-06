@@ -27,7 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-leba%ve-o$&mt82ntcxb(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','fidelarias.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1','sistemaasistenciaucsm.es','www.sistemaasistenciaucsm.es']
+CSRF_TRUSTED_ORIGINS = ['http://sistemaasistenciaucsm.es', 'https://www.sistemaasistenciaucsm.es']
+
 
 # Application definition
 
