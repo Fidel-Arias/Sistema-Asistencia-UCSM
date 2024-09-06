@@ -11,7 +11,7 @@ class MaeBloque(models.Model):
     horainicio = models.TimeField()
     horafin = models.TimeField()
     idubicacion = models.ForeignKey(MaeUbicacion, models.DO_NOTHING, db_column='idubicacion')
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

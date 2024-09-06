@@ -4,7 +4,7 @@ from django.db import models
 class MaeUbicacion(models.Model):
     idubicacion = models.AutoField(primary_key=True)
     ubicacion = models.CharField(max_length=60)
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

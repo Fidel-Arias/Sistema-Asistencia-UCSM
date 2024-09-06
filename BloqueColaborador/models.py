@@ -9,7 +9,7 @@ class BloqueColaborador(models.Model):
     idcolaborador = models.ForeignKey(MaeColaborador, models.DO_NOTHING, db_column='idcolaborador')
     idbloque = models.ForeignKey(MaeBloque, models.DO_NOTHING, db_column='idbloque')
     idcongreso = models.ForeignKey(MaeCongreso, models.DO_NOTHING, db_column='idcongreso')
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

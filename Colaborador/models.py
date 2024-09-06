@@ -9,7 +9,7 @@ class MaeColaborador(models.Model):
     correo = models.CharField(max_length=40)
     contrasenia = models.CharField()
     idtipo = models.ForeignKey(MaeTipousuario, models.DO_NOTHING, db_column='idtipo')
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

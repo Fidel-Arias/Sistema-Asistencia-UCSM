@@ -8,7 +8,7 @@ class MaePonencia(models.Model):
     idponente = models.ForeignKey(MaePonente, models.DO_NOTHING, db_column='idponente')
     nombre = models.CharField(max_length=255)
     idcongreso = models.ForeignKey(MaeCongreso, models.DO_NOTHING, db_column='idcongreso')
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False

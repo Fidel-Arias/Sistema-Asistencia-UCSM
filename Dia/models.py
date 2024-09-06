@@ -6,7 +6,7 @@ class MaeDia(models.Model):
     iddia = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
     idcongreso = models.ForeignKey(MaeCongreso, models.DO_NOTHING, db_column='idcongreso')
-    estado = models.CharField(max_length=11)
+    estado = models.CharField(max_length=11, default='ACTIVO')
 
     class Meta:
         managed = False
