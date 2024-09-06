@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/r_ponencia.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Ponencia</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="flex-main">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <main class="main-content">
+            <!-- Tabla de Ponencias -->
+            <h2 class="h2-Contenido-actual">Contenido Actual</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 250px;">NOMBRE</th>
+                            <th style="width: 230px;">PONENTE</th>
+                            <th style="width: 100px;">ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ponencia in ponencias %}
+                        <tr>
+                            <td>{{ponencia.idponencia.nombre}}</td>
+                            <td>{{ponencia.idponencia.idponente}}</td>
+                            <td>{{ponencia.idponencia.estado}}</td>
+                            <td class="check-td">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{ponencia.idponencia.idponencia}}"
+                                    data-nombre="{{ponencia.idponencia.nombre}}"
+                                    data-ponente="{{ponencia.idponencia.idponente.idponente}}"
+                                    data-estado="{{ponencia.idponencia.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <!-- Añade más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Registrar Ponencia</h2>
+            <form class="register-form" method="POST" action="{% url 'RegistrarPonencia' pk %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="id" id="ponenciaid">
+                <label for="ponente">Ponente</label>
+                <select id="ponente" name="ponente" required>
+                    <option value="" disabled selected>Seleccionar un ponente</option>
+                    {% for admin in admin_ponentes %}
+                        {% for ponente in admin.administradorponentes_set.all %}
+                            {% if ponente.idponente in ponentes_activos %}
+                            <option value="{{ponente.idponente.idponente}}">{{ponente.idponente.nombres}} {{ponente.idponente.apellidos}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    <!-- Más opciones según los ponentes registrados -->
+                </select>
+                <label for="nombre_ponencia">Nombre de la Ponencia</label>
+                <input type="text" id="nombre_ponencia" name="nombre_ponencia" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+
+                <div class="button-container">
+                    <button type="submit" class="register-button" id="register-button" name="action" value="register">Registrar</button>
+                    <button type="submit" class="delete-button" id="delete-button" name="action" value="delete">Desactivar</button>
+                    <button type="submit" class="edit-button" id="edit-button" name="action" value="edit">Actualizar</button>
+                </div>
+            </form>
+
+        </main>
+    </div>
+</body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
+
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
+
+                //Extrayendo datos
+                const idponencia = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const ponente = event.currentTarget.getAttribute('data-ponente');
+                estado = event.currentTarget.getAttribute('data-estado');
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Desactivar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('ponenciaid').value = idponencia;
+                document.getElementById('nombre_ponencia').value = nombre;
+                document.getElementById('ponente').value = ponente;
+            });
+        });
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
+</html>

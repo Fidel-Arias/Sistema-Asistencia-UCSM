@@ -1,0 +1,160 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/congreso.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Congreso</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="flex-main">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <main class="main-content">
+            <!-- Tabla de Congresos -->
+            <h2 class="h2-Contenido-actual">Contenido Actual</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>INICIA</th>
+                            <th>FINALIZA</th>
+                            <th style="width: 155px;">ASISTENCIA TOTAL</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for congreso in congresos %}
+                            <tr>
+                                <td>{{congreso.nombre}}</td>
+                                <td>{{congreso.fechainicio|date:"d/m/Y"}}</td>
+                                <td>{{congreso.fechafin|date:"d/m/Y"}}</td>
+                                <td>{{congreso.asistenciatotal}}</td>
+                                <td>{{congreso.estado}}</td>
+                                <td class="check-td">
+                                    <button type="button" class="fill-btn"
+                                            data-id="{{congreso.idcongreso}}"
+                                            data-nombre="{{congreso.nombre}}" 
+                                            data-fechainicio="{{congreso.fechainicio|date:'Y-m-d'}}" 
+                                            data-fechafin="{{congreso.fechafin|date:'Y-m-d'}}" 
+                                            data-asistenciatotal="{{congreso.asistenciatotal}}"
+                                            data-estado="{{congreso.estado}}">
+                                        <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <!-- Añade más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+    
+            <h2>Registrar Congreso</h2>
+            <form class="register-form" method="POST" action="{% url 'RegistrarCongreso' pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="id" id="congresoid">
+                <label for="nombre">Nombre del Congreso</label>
+                <input type="text" id="nombre" name="nombreCongreso" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+    
+                <div class="flex-congreso-inicio-fin">
+                    <div class="form-group">
+                        <label for="fechaInicio">Inicio del congreso</label>
+                        <input type="date" class="input__fechaInicio" id="fechaInicio" name="fechaInicio" required>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="fechaFin">Fin del congreso</label>
+                        <input type="date" class="input__fechaFin" id="fechaFin" name="fechaFin" required>
+                    </div>
+                </div>
+
+                <label for="cantidadAsistencias">Total de Asistencia</label>
+                <input type="number" name="totalAsistencia" id="totalAsistencia" required>
+    
+                <div class="button-container">
+                    <button type="submit" id="desactivate-button" class="delete-button" name="action" value="desactivate">Desactivar</button>
+                    <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
+                </div>
+            </form>
+    
+            
+        </main>
+
+    </div>
+</body>
+<script>
+        
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('desactivate-button');
+        const buttonActualizar = document.getElementById('edit-button');
+
+        //Deshabilitando ambos botones
+        buttonActualizar.disabled = true;
+        buttonDesactivado.disabled = true;
+        buttonDesactivado.style.cursor = 'not-allowed';
+        buttonActualizar.style.cursor = 'not-allowed';
+
+        //cambiando los colores
+        buttonActualizar.style.backgroundColor = '#F0F0F0';
+        buttonDesactivado.style.backgroundColor = '#F0F0F0';
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Habilitando los botones
+                buttonActualizar.disabled = false;
+                buttonDesactivado.disabled = false;
+                buttonDesactivado.style.cursor = 'pointer';
+                buttonActualizar.style.cursor = 'pointer';
+                
+                //colores
+                buttonActualizar.style.backgroundColor = '#28a745';
+                buttonDesactivado.style.backgroundColor = '#dc3545';
+
+                //Datos
+                const idcongreso = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const fechainicio = event.currentTarget.getAttribute('data-fechainicio');
+                const fechafin = event.currentTarget.getAttribute('data-fechafin');
+                estado = event.currentTarget.getAttribute('data-estado');
+                const asistenciatotal = event.currentTarget.getAttribute('data-asistenciatotal');
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('desactivate-button').innerText = "Activar";
+                    document.getElementById('desactivate-button').value = "activate";
+                } else {
+                    document.getElementById('desactivate-button').innerText = "Desactivar";
+                    document.getElementById('desactivate-button').value = "desactivate";
+                }
+
+                document.getElementById('congresoid').value = idcongreso;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('fechaInicio').value = fechainicio;
+                document.getElementById('fechaFin').value = fechafin;
+                document.getElementById('totalAsistencia').value = asistenciatotal;
+            });
+        });
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
+</html>

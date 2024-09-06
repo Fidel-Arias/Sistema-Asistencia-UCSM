@@ -1,0 +1,182 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/colaborador.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Colaborador</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenedor principal -->
+    <div class="main-container" id="main">
+        <!-- Tabla de contenido -->
+         
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <tr>
+                                <th>NOMBRES</th>
+                                <th>APELLIDOS</th>
+                                <th>CORREO</th>
+                                <th>TIPO</th>
+                                <th>ESTADO</th>
+                            </tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for colaborador in colaboradores %}
+                        <tr>
+                            <td style="width: 180px;">{{colaborador.idcolaborador.nombres}}</td>
+                            <td style="width: 180px;">{{colaborador.idcolaborador.apellidos}}</td>
+                            <td style="width: 195px;">{{colaborador.idcolaborador.correo}}</td>
+                            <td style="width: 90px;">{{colaborador.idcolaborador.idtipo}}</td>
+                            <td style="width: 100px;">{{colaborador.idcolaborador.estado}}</td>
+                            <td class="check-td" style="width: 190px;">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{colaborador.idcolaborador.idcolaborador}}"
+                                    data-nombre="{{colaborador.idcolaborador.nombres}}"
+                                    data-apellido="{{colaborador.idcolaborador.apellidos}}"
+                                    data-correo="{{colaborador.idcolaborador.correo}}"
+                                    data-password="{{colaborador.idcolaborador.contrasenia}}"
+                                    data-usuario="{{colaborador.idcolaborador.idtipo.idtipo}}"
+                                    data-estado="{{colaborador.idcolaborador.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Contenido principal -->
+        <div class="content-fondo">
+            <h2>Registrar Colaborador</h2>
+            <main class="main-content">
+                <form class="register-form" method="POST" action="{% url 'RegistrarColaboradores' pk %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="id" id="usuarioid">
+                    <div class="flex-nombre-apellido">
+                        <div class="form-group form-nombres">
+                            <label for="nombre" class="label__nombre">Nombres</label>
+                            <input type="text" class="input__nombre" name="nombre" id="nombre" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apellido" class="label__apellido">Apellidos</label>
+                            <input type="text" class="input__apellido" name="apellido" id="apellido" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toUpperCase()">
+                        </div>
+                    </div>
+
+                    <div class="flex-correo-password">
+                        <div class="form-group group-correo">
+                            <label for="correo" class="label__correo">Correo</label>
+                            <input type="email" class="input__correo" id="correo" name="correo" required onkeyup="document.getElementById(this.id).value=document.getElementById(this.id).value.toLowerCase()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contrasenia" class="label__password">Contraseña</label>
+                            <input type="password" class="input__password" id="contrasenia" name="contrasenia" required>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-select">
+                        <div class="form-group group-usuario">
+                            <label for="tipoUsuario">Tipo de Usuario</label>
+                            <select class="combobox" name="tipoUsuario" id="tipoUsuario" required>
+                                <option value="" disabled selected>Seleccionar tipo de usuario</option>
+                                {% for usuario in tiposUsuario %}
+                                    <option value="{{usuario.idtipo}}">{{usuario.dstipo}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
+                    </div>
+
+                </form>
+            </main>
+        </div>
+
+    </div>
+</body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
+
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
+
+                //Extrayendo datos
+                const id = event.currentTarget.getAttribute('data-id');
+                const nombre = event.currentTarget.getAttribute('data-nombre');
+                const apellido = event.currentTarget.getAttribute('data-apellido');
+                const correo = event.currentTarget.getAttribute('data-correo');
+                const password = event.currentTarget.getAttribute('data-password');
+                const tipoUsuario = event.currentTarget.getAttribute('data-usuario');
+                estado = event.currentTarget.getAttribute('data-estado');
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Desactivar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('usuarioid').value = id;
+                document.getElementById('nombre').value = nombre;
+                document.getElementById('apellido').value = apellido;
+                document.getElementById('correo').value = correo;
+                document.getElementById('contrasenia').value = password;
+                document.getElementById('tipoUsuario').value = tipoUsuario;
+            });
+        });
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
+</html>

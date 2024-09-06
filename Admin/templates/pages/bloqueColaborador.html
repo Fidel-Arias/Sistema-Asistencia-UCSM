@@ -1,0 +1,182 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bloque_colaborador.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Colaborador y Bloques</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <div class="main-container" id="main">
+        <!-- Tabla de contenido -->
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>COLABORADOR</th>
+                            <th>BLOQUES ASIGNADOS</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for colaborador, bloques in bloques_por_colaborador.items %}
+                        <tr>
+                            <td style="width: 180px;">{{colaborador}}</td>
+                            <td style="width: 200px;">
+                                 <!-- Mostrar todos los bloques del colaborador -->
+                                {% for bloque in bloques %}
+                                    {{ bloque.idbloque }}<br>
+                                {% endfor %}
+                            </td>
+                            <td style="width: 100px;">{{bloques.0.estado}}</td>
+                            <td class="check-td" style="width: 190px;">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{ bloques.0.idbc }}"
+                                    data-colaborador="{{colaborador.idcolaborador}}"
+                                    data-bloques="{% for blcl in bloques %}{{ blcl.idbloque.idbloque }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                    data-estado="{{ bloques.0.estado }}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Contenido principal -->
+        <div class="content-fondo">
+            <h2>Seleecionar Bloques para el Colaborador</h2>
+            <main class="main-content">
+                <form class="register-form" method="POST" action="{% url 'RegistrarBloqueColaborador' pk %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="id" id="blclid">
+
+                    <label for="tipoUsuario">Colaborador</label>
+                    <select class="combobox" name="colaborador" id="colaborador" required>
+                        <option value="" disabled selected>Seleccionar el colaborador</option>
+                        {% for admin in admin_colaboradores %}
+                            {% for colaborador in admin.administradorcolaborador_set.all %}
+                                {% if colaborador.idcolaborador in colaboradores_activos %}
+                                <option value="{{colaborador.idcolaborador.idcolaborador}}">{{colaborador.idcolaborador}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+
+                    <h2>Bloques disponibles</h2>
+                    <div class="flex-bloques-selected">
+                        <div class="bloques-container">
+                            <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                            {% for admin in admin_bloques %}
+                                {% for bloque in admin.administradorbloques_set.all %}
+                                    {% if bloque.idbloque in bloques_activos %}
+                                    <div class="form-bloque">
+                                        <input type="checkbox" id="bloque_{{bloque.idbloque.idbloque}}" name="bloques" value="{{bloque.idbloque.idbloque}}" >
+                                        <label for="bloque_{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</label>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('.fill-btn');
+        var estado;
+
+        //Botones desactivados Desactivar y Eliminar 
+        const buttonDesactivado = document.getElementById('delete-button');
+        const buttonActualizar = document.getElementById('edit-button');
+        const buttonRegister = document.getElementById('register-button');
+
+        buttonActualizar.style.display = 'none';
+        buttonDesactivado.style.display='none';
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                //Agregando los botones
+                buttonActualizar.style.display='block';
+                buttonDesactivado.style.display='block';
+                buttonRegister.style.display = 'none';
+
+                //Extrayendo datos
+                const idblcl = event.currentTarget.getAttribute('data-id');
+                const colaborador = event.currentTarget.getAttribute('data-colaborador');
+                const bloques = event.currentTarget.getAttribute('data-bloques').split(',').map(Number);
+                estado = event.currentTarget.getAttribute('data-estado');
+                
+
+                if (estado === "NO ACTIVO") {
+                    document.getElementById('delete-button').innerText = "Activar";
+                    document.getElementById('delete-button').value = "activate";
+                } else {
+                    document.getElementById('delete-button').innerText = "Desactivar";
+                    document.getElementById('delete-button').value = "delete";
+                }
+
+                document.getElementById('blclid').value = idblcl;
+                document.getElementById('colaborador').value = colaborador;
+                 // Limpiar todos los checkboxes primero
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][name="bloques"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                // Marcar los checkboxes correspondientes
+                bloques.forEach(bloqueId => {
+                    const checkbox = document.getElementById(`bloque_${bloqueId}`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            });
+        });
+    });
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        var mainContent = document.getElementById('main');
+        if (message) {
+            message.style.display = 'none';
+            mainContent.style.gap = '2em';
+        }
+    }, 3000); // 3000 milisegundos = 3 segundos
+</script>
+</html>

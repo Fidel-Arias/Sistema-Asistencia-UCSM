@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bloques.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Bloques</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="main-container" id="main">
+
+        <!-- Tabla de contenido -->
+        <div class="table-container">
+            <h2>Contenido Actual</h2>
+            <div class="table-container-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 185px;">PONENCIA</th>
+                            <th style="width: 170px;">DÍA</th>
+                            <th style="width: 70px">INICIO</th>
+                            <th style="width: 70px">FIN</th>
+                            <th style="width: 175px;">UBICACIÓN</th>
+                            <th style="width: 165px;">ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se deberían cargar dinámicamente los bloques registrados -->
+                        {% for bloque in bloques %}
+                        <tr>
+                            <td>{{bloque.idbloque.idponencia}}</td>
+                            <td>{{bloque.idbloque.iddia.fecha|date:"d/m/Y"}}</td>
+                            <td>{{bloque.idbloque.horainicio|time:"H:i A"}}</td>
+                            <td>{{bloque.idbloque.horafin|time:"H:i A"}}</td>
+                            <td>{{bloque.idbloque.idubicacion}}</td>
+                            <td>{{bloque.idbloque.estado}}</td>
+                            <td class="check-td">
+                                <button type="button" class="fill-btn"
+                                    data-id="{{bloque.idbloque.idbloque}}"
+                                    data-ponencia="{{bloque.idbloque.idponencia.idponencia}}"
+                                    data-dia="{{bloque.idbloque.iddia.iddia}}"
+                                    data-horainicio="{{bloque.idbloque.horainicio|time:'H:i'}}"
+                                    data-horafin="{{bloque.idbloque.horafin|time:'H:i'}}"
+                                    data-ubicacion="{{bloque.idbloque.idubicacion.idubicacion}}"
+                                    data-estado="{{bloque.idbloque.estado}}">
+                                    <img class="check-edit" src="{% static 'images/check-edit.png' %}" alt="check">
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="content-fondo">
+            <h2>Registrar Bloques</h2>
+            <main class="main-content">
+                <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarBloques' pk %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="id" id="bloqueid">
+                    <label for="ponencia">Ponencia</label>
+                    <select id="ponencia" name="ponencia" required style="margin-bottom: 0.2em;">
+                        <option value="" selected disabled>Seleccionar una ponencia</option>
+                        {% for admin in admin_ponencias %}
+                            {% for ponencia in admin.administradorponencias_set.all %}
+                                {% if ponencia.idponencia in ponencias_activas %}
+                                <option value="{{ponencia.idponencia.idponencia}}">{{ponencia.idponencia.nombre}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+    
+                    <label for="dia">Día</label>
+                    <select id="dia" name="dia" required>
+                        <option value="" selected disabled>Seleccionar el dia</option>
+                        {% for dia in dias %}
+                        <option value="{{dia.iddia}}">{{dia}}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div class="flex-hora">
+                        <div class="form-group">
+                            <label for="hora_inicio" class="label__hora-inicio">Inicia</label>
+                            <input type="time" class="input__hora-inicio" id="hora_inicio" name="hora_inicio" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hora_fin" class="label__hora-fin">Finaliza</label>
+                            <input type="time" class="input__hora-fin" id="hora_fin" name="hora_fin" required>
+                        </div>
+                    </div>
+                    
+                    <label for="direccion">Ubicación</label>
+                    <select id="ubicacion" name="ubicacion" required>
+                        <option value="" selected disabled>Seleccionar la ubicación</option>
+                        {% for ubicacion in ubicaciones %}
+                            <option value="{{ubicacion.idubicacion}}">{{ubicacion}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="button-container">
+                        <button type="submit" id="register-button" class="register-button" name="action" value="register">Registrar</button>
+                        <button type="submit" id="delete-button" class="delete-button" name="action" value="delete">Desactivar</button>
+                        <button type="submit" id="edit-button" class="edit-button" name="action" value="edit">Actualizar</button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/buttonConfiguration.js' %}"></script>
+<script>
+    //Obtener datos de la tabla
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const buttons = document.querySelectorAll('.fill-btn');
+    var estado;
+
+    //Botones desactivados Desactivar y Eliminar 
+    const buttonDesactivado = document.getElementById('delete-button');
+    const buttonActualizar = document.getElementById('edit-button');
+    const buttonRegister = document.getElementById('register-button');
+
+    buttonActualizar.style.display = 'none';
+    buttonDesactivado.style.display='none';
+
+    buttons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            //Agregando los botones
+            buttonActualizar.style.display='block';
+            buttonDesactivado.style.display='block';
+            buttonRegister.style.display = 'none';
+
+            //Extrayendo datos
+            const idbloque = event.currentTarget.getAttribute('data-id');
+            const ponencia = event.currentTarget.getAttribute('data-ponencia');
+            const dia = event.currentTarget.getAttribute('data-dia');
+            const horaInicio = event.currentTarget.getAttribute('data-horainicio');
+            const horaFin = event.currentTarget.getAttribute('data-horafin');
+            const ubicacion = event.currentTarget.getAttribute('data-ubicacion');
+            estado = event.currentTarget.getAttribute('data-estado');
+
+            if (estado === "NO ACTIVO") {
+                document.getElementById('delete-button').innerText = "Activar";
+                document.getElementById('delete-button').value = "activate";
+            } else {
+                document.getElementById('delete-button').innerText = "Desactivar";
+                document.getElementById('delete-button').value = "delete";
+            }
+
+            document.getElementById('bloqueid').value = idbloque;
+            document.getElementById('ponencia').value = ponencia;
+            document.getElementById('dia').value = dia;
+            document.getElementById('hora_inicio').value = horaInicio;
+            document.getElementById('hora_fin').value = horaFin;
+            document.getElementById('ubicacion').value = ubicacion;
+        });
+    });
+    });
+</script>
+<script src="{% static 'js/messageTime.js' %}"></script>
+</html>

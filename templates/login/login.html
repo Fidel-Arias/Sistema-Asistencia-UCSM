@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Iniciar Sesión</title>
+</head>
+<body>
+    <header class="header">
+        <img class="img-ucsm" src="{% static 'images/logoUCSM.png' %}" alt="UCSM" />
+        <img class="img-ucsm-blanco" src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM">
+        <img class="img-epis" src="{% static 'images/logoEPIS.png' %}" alt="Epis" />
+        <img class="img-epis-blanco" src="{% static 'images/epis_logo_blanco.webp' %}" alt="Epis" />
+    </header>
+
+    <div class='img-login-bloque'>
+        <div class="image-jinis-universidad">
+            <img class="jinis" src="{% static 'images/logo_jinis2024.webp' %}" alt="logo jinis"/>
+            <p>XXXI Jornada Internacional de Ingeniería de Sistemas</p>
+        </div>
+
+        <div class="form-login-bloque">
+            <h1 class="etiqueta">INICIAR SESIÓN</h1>
+            <form action="{% url 'Login' %}" method="POST" class="form_login">
+                {% csrf_token %}
+                <div class="bloque-icon-input">
+                    <img src="{% static 'images/icon-key-blanco.png' %}" alt="key" class="key-active">
+                    <div class="input-box">
+                        <label for="codigo">Código</label>
+                        <input type="password" name="codigo" required placeholder="Ingrese su DNI" />
+                    </div>
+                </div>
+                
+                <button type="submit" class="buttonEntrar">Ingresar</button>
+
+                {% if error %}
+                    <p style="color: red; margin: 0;" id="error">{{ error }}</p>
+                {% endif %}
+    
+                <div class="enlaces-login">
+                    <a href="{% url 'LoginColaborador' %}" class="colaboradorEnlace">Ingresa aqui si eres Colaborador</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(function() {
+            var message = document.getElementById('error');
+            if (message) {
+                message.style.display = 'none';
+            }
+        }, 3000);
+</script>
+</html>

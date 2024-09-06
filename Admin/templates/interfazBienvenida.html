@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de Administración</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bienvenida.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <main class="container-admin">
+        <div class="center">
+            <h1>BIENVENIDO, {{admin.nombres}}</h1>
+            <img src="{% static 'images/image_bienvenida.webp' %}" alt="imagen de bienvenida">
+            <p>Esta es la interfaz de administración del sistema de asistencia JINIS.</p>
+        </div>
+    </main>
+</body>
+</html>

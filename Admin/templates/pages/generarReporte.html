@@ -1,0 +1,44 @@
+{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reportes</title>
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+        <!-- Contenido principal -->
+        <main class="main-content-reporte main">
+            <h2>Generar Reporte</h2>
+    
+            <form action="{% url 'GenerarReporte' pk %}" method="POST" class="formulario">
+                {% csrf_token %}
+                <div class="input-name">
+                    <label for="input-name">Nombre del archivo</label>
+                    <input type="text" name="input-name" id="name" required placeholder="Ingrese un nombre para el archivo">
+                </div>
+                
+                {% if is_there_Data %}
+                <div class="button-descarga">
+                    <!-- <button type="button" class="button button-1">Ver Reporte</button> -->
+                    <button type="submit" class="button button-2">Descargar</button>
+                </div>
+                {% endif %}
+            </form>
+            
+        </main>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/participantes.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Perfil del Participante</title>
+</head>
+<body>
+    <div class="container">
+        <div class="top-section">
+            <img src="{% static 'images/logoEPIS.png' %}" alt="imagen" class="top-image-right"></img>
+            <img src="{% static 'images/logoUCSM.png' %}" class="top-image-left"></img>
+            <img src="{% static 'images/logo_jinis2024.webp' %}" alt="imagen" class="top-image2"></img>
+            <img src="{% static 'images/usuario.png' %}" alt="Imagen" class="top-image">
+            <div class="greeting">Bienvenido, {{nombre}}</div>
+        </div>
+        <div class="middle-section-scroll">
+            <div class="middle-section">
+                <div class="attendance-text">CANTIDAD DE ASISTENCIAS</div>
+                <div class="attendance-count">{{cantidad_asistencia}}</div>
+                <div class="attendance-text">CODIGO</div>
+                <div class="student-code">{{participante_data.codparticipante}}</div>            
+            </div>
+    
+            <div class="QR-code">
+                <img src="{% static participante_qrcode_path %}" alt="QR Code">
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="left-button">
+                <a class="button profile-button">
+                    <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon">Perfil
+                </a>
+            </div>
+            <div class="center-button">
+                <a href="{% url 'Ponencias' participante_data.codparticipante  %}" class="button presentations-button">
+                    <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon">Ponencias
+                </a>
+            </div>
+            <div class="right-button">
+                <a href="{% url 'SalirParticipante' %}" class="button exit-button" href="#">
+                    <img src="{% static 'images/opened-door-aperture.png' %}" alt="Exit Icon">Salir
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

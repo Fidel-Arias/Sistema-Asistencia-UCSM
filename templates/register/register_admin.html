@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/register_admin.css' %}" type="text/css">
+    <link rel="icon" href="{% static 'images/Escudo-UCSM.png' %}" type="image/x-icon">
+    <title>Registrarse</title>
+</head>
+<body>
+    <span class="message alert-failed top"></span>
+    <div class="container">
+        <div class="left-panel">
+            <h2 class="panel-title">
+                Bienvenido al sistema de registro para administradores
+            </h2>
+        </div>
+        <article class="right-panel">
+            <div class="logo">
+                <img src="{% static 'images/logoUCSM.webp' %}" alt="Universidad Católica de Santa María">
+                <img src="{% static 'images/logoEPIS.png' %}" alt="EPIS">
+            </div>
+            <h1 class="title">Registrarse</h1>
+            <div class="step-indicators">
+                <div class="step-indicator active" id="step1"></div>
+                <div class="step-indicator" id="step2"></div>
+            </div>
+            <form class="form" id="formulario-admin">
+
+                <div class="register-form">
+                    <div class="input-group">
+                        <label for="nombre">Nombre Completo</label>
+                        <input type="text" id="nombreInput" name="nombre" placeholder="Ingrese sus nombres completos" required onkeyup="document.getElementById(this.id).value = document.getElementById(this.id).value.toUpperCase()">
+                    </div>
+                    <div class="input-group">
+                        <label for="apellido">Apellido Completo</label>
+                        <input type="text" id="apellidoInput" name="apellido" placeholder="Ingrese sus apellidos completos" required onkeyup="document.getElementById(this.id).value = document.getElementById(this.id).value.toUpperCase()">
+                    </div>
+                    <div class="input-group">
+                        <label for="correo">Correo</label>
+                        <input type="email" id="correoInput" name="correo" placeholder="Ingrese un correo electrónico" required onkeyup="document.getElementById(this.id).value = document.getElementById(this.id).value.toLowerCase()">
+                    </div>
+                    <div class="input-group">
+                        <label for="contrasena">Contraseña</label>
+                        <input type="password" id="contrasenaInput" name="contrasena" placeholder="Ingrese una contraseña" required>
+                    </div>
+                </div>
+                <span class="alert-error"></span>
+                <button class="submit-btn" type="button">
+                    <img src="{% static 'images/icon-next.png' %}" alt="next"> Siguiente
+                </button>
+
+            </form>
+            
+            <a href="{% url 'LoginAdmin' %}" id="nextButton">Iniciar Sesión</a>
+        </article>
+    </div>
+
+    <div class="container-congreso hide-derecha">
+        <div class="left-panel">
+            <h2 class="panel-title">
+                Registre los datos del congreso a administrar
+            </h2>
+        </div>
+        <article class="right-panel">
+            <div class="logo">
+                <img src="{% static 'images/logoUCSM.webp' %}" alt="Universidad Católica de Santa María">
+                <img src="{% static 'images/logoEPIS.png' %}" alt="EPIS">
+            </div>
+            <h1 class="title">Registrar Congreso</h1>
+            <div class="step-indicators">
+                <div class="step-indicator" id="step1"></div>
+                <div class="step-indicator active" id="step2"></div>
+            </div>
+            <p class="indications">Ingrese los datos del congreso a administrar</p>
+            <form id="formulario" method="POST" action="{% url 'RegisterAdmin' %}">
+                {% csrf_token %}
+                <div class="register-form">
+                        
+                    <div class="input-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombreCongreso" name="nombre" placeholder="Ingrese el nombre del congreso" onkeyup="document.getElementById(this.id).value = document.getElementById(this.id).value.toUpperCase()">
+                    </div>
+                    <div class="input-group">
+                        <label for="asistencias">N° de asistencias</label>
+                        <input type="text" id="asistencias" name="asistencias" placeholder="Ingrese el número de asistencias">
+                    </div>
+                    <div class="input-group">
+                        <label for="inicioCongreso">Inicio del congreso</label>
+                        <input type="date" id="inicioCongreso" name="inicioCongreso" placeholder="Ingrese un correo electrónico">
+                    </div>
+                    <div class="input-group">
+                        <label for="finCongreso">Fin del congreso</label>
+                        <input type="date" id="finCongreso" name="finCongreso" placeholder="Ingrese una contraseña">
+                    </div>
+                </div>
+                <span class="alert-error-congreso"></span>
+                <div class="buttons">
+                    <button class="btn back-btn" type="button">
+                        <img src="{% static 'images/icon-next.png' %}" alt="before">Anterior
+                    </button>
+                    <button class="btn register-btn" type="submit">
+                            Registrar
+                    </button>
+                </div>
+            </form>
+            
+            <a href="{% url 'LoginAdmin' %}" id="nextButton">Iniciar Sesión</a>
+        </article>
+    </div>
+</body>
+<script src="{% static 'js/register_admin.js' %}"></script>
+</html>

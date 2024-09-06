@@ -1,0 +1,49 @@
+    <!-- Barra Lateral -->
+    
+    {% load static %}
+    
+    <div class="sidebar">
+        <div class="sidebar-principal">
+            <a href="{% url 'GenerarReporte' pk %}" class="{% if current_page == 'generar_reportes' %}active{% endif %}">
+                <img src="{% static 'images/reporte.webp' %}" alt="Reporte_icon">
+                <span>Generar reporte</span>
+            </a>
+            <a href="{% url 'RegistrarCongreso' pk %}" class="{% if current_page == 'registrar_congreso' %}active{% endif %}">
+                <img src="{% static 'images/congreso_icon.webp' %}" alt="Congreso_icon">
+                <span>Congreso</span>
+            </a>
+            <a href="{% url 'RegistrarUbicaciones' pk %}" id="registrarUbicaciones" class="sidebar-ubicaciones {% if current_page == 'registrar_ubicaciones' %}active{% endif %} nav">
+                <img src="{% static 'images/ubicacion-icon.webp' %}" alt="Ubicacion_icon">
+                <span>Registrar Ubicaciones</span>
+            </a>
+            <a href="{% url 'RegistrarPonentes' pk %}" id="registrarPonentes" class="{% if current_page == 'registrar_ponentes' %}active{% endif %} nav">
+                <img src="{% static 'images/ponentes_icon.webp' %}" alt="Ponentes_icon">
+                <span>Registrar ponentes</span>
+            </a>
+            <a href="{% url 'RegistrarPonencia' pk %}" id="registrarPonencias" class="{% if current_page == 'registrar_ponencia' %}active{% endif %} nav">
+                <img src="{% static 'images/ponencia_icon.webp' %}" alt="Ponencia_icon">
+                <span>Registrar ponencia</span>
+            </a>
+            <a href="{% url 'RegistrarBloques' pk %}" id="registrarBloques" class="{% if current_page == 'registrar_bloques' %}active{% endif %} nav">
+                <img src="{% static 'images/bloques_icon.webp' %}" alt="Bloques_icon">
+                <span>Registrar bloques</span>
+            </a>
+            <a href="{% url 'RegistrarColaboradores' pk %}" id="registrarColaboradores" class="sidebar-colaborador {% if current_page == 'registrar_colaboradores' %}active{% endif %} nav">
+                <img src="{% static 'images/colaboradores_icon.webp' %}" alt="Ponencia_icon">
+                <span>Registrar Colaboradores</span>
+            </a>
+            <a href="{% url 'RegistrarBloqueColaborador' pk %}" id="registrarBloqueColaborador" class="sidebar-colaborador {% if current_page == 'registrar_bloques_colaboradores' %}active{% endif %} nav">
+                <img src="{% static 'images/bloque-colaborador_icon.webp' %}" alt="bloque del colaborador">
+                <span>Asociar bloques con Colaborador</span>
+            </a>
+            <a href="{% url 'ImportarDatos' pk %}" class="{% if current_page == 'importar_datos' %}active{% endif %} nav">
+                <img src="{% static 'images/datos_icon.webp' %}" alt="importar-icon">
+                <span>Importar y Generar datos</span>
+            </a>
+        </div>
+        <a href="{% url 'CerrarSesion' %}" class="cerrar-sesion">
+            <img src="{% static 'images/cerrarSesion.webp' %}" alt="Cerrar sesión">
+            <span>Cerrar sesión</span>
+        </a>
+
+    </div>
