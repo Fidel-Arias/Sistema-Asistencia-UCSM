@@ -15,7 +15,7 @@ class viewPonencias(viewsets.ViewSet):
             if codparticipante != str(pk):
                 request.session['error'] = 'Acceso inválido'
                 return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
-            
+
             bloques = AdministradorBloques.objects.filter(idadministrador = 14)
             participante = MaeParticipantes.objects.get(pk=pk)
             return render(request, 'ponencias.html', {
