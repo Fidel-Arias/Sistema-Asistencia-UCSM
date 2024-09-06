@@ -16,6 +16,7 @@ from django.contrib import messages
 import qrcode
 import json
 import pandas as pd
+from config import settings
 import os
 
 #Variables locales
@@ -86,7 +87,7 @@ class Importar_Datos(viewsets.ViewSet):
                 'archivo_subido': archivo_subido,
                 'pk': pk
             })
-        
+
 class Generar_QRCode(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def generar_codigo_qrcode(self, request, pk):
@@ -116,15 +117,18 @@ class Generar_QRCode(viewsets.ViewSet):
                 qr.make(fit=True)
                 img = qr.make_image(fill_color='black', back_color='white')
 
-                #save img
-                file_path = f"/static/qrcodes/{participante.pk}.png"
+                # Nombre y path del archivo
+                file_name = f"{participante.pk}.png"
+                file_path = os.path.join(settings.STATIC_ROOT, 'qrcodes', file_name)
 
-                #Se guarda la url de la carpeta de su codigo qr del participante
-                participante.qr_code = file_path
-                participante.save()
+                # Guardar imagen en la carpeta qrcodes
                 img.save(file_path)
-                file_path
-            
+
+                # Guardar la URL relativa del archivo en la base de datos
+                file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
+                participante.qr_code = file_url
+                participante.save()
+
             messages.success(request, 'Códigos QR generado con éxito')
             archivo_subido = False
             return render(request, 'pages/importarDatos.html', {
@@ -134,7 +138,7 @@ class Generar_QRCode(viewsets.ViewSet):
             })
         else:
             return redirect('ImportarDatos')
-    
+
 def enviar_email_participantes(datos_user, img_path):
     try:
         template = render_to_string('messages/mail_colaborador.html', {
