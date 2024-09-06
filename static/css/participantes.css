@@ -1,4 +1,8 @@
 /* archivo: css/participantes.css */
+@font-face {
+    font-family: 'NicoMoji';
+    src: url('/static/fonts/NicoMoji-Regular.ttf') format('truetype');
+}
 
 body{
     font-family: 'Arial', sans-serif;
@@ -66,7 +70,6 @@ body{
 
 .greeting {
     margin-top: 4px;
-    color: white;
     font-size: 18px;
     font-weight: bold;
 }
@@ -81,15 +84,32 @@ body{
     text-align: center;
 }
 
+.attendance-group {
+    display: flex;
+    justify-content: space-around;
+    max-width: 300px;
+    margin: 20px auto 0;
+
+    .attendance-text {
+        text-align: left;
+    }
+
+    .attendance-count {
+        width: 60%;
+    }
+}
+
 .attendance-text {
+    font-family: 'NicoMoji', sans-serif;
     font-size: 16px;
+    font-weight: bold;
     color: #333;
     margin-top: 20px;
 }
 
 .attendance-count,
 .student-code {
-    font-size: 20px;
+    font-size: 24px;
     width: 80%;
     max-width: 280px;
     color: #aaa;
@@ -117,6 +137,7 @@ body{
     display: flex;
     justify-content: space-around;
     background: #fff;
+    font-family: 'NicoMoji', sans-serif;
     border-top: 1px solid #ddd;
     padding: 10px 0;
     position: relative;
@@ -128,6 +149,7 @@ body{
     text-decoration: none;
     color: #000;
     font-size: 14px;
+    font-weight: bold;
     text-align: center;
     display: block;
 }
@@ -136,6 +158,15 @@ body{
     width: 35px;
     height: 45px;
     margin-bottom: 5px;
+}
+
+.button svg {
+    width: 45px;
+    height: 50px;
+}
+
+.button.exit-button {
+    color: #A52019;
 }
 
 .left-button a,

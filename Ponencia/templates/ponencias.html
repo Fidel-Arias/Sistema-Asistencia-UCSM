@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/ponencias.css' %}">
+    <title>Ponencias</title>
+</head>
+<body>
+    <h1>PONENCIAS</h1>
+
+    <div class="card-scroll">
+        {% for ponencia in ponencias %}
+        <div class="card">
+            <div class="card-content">
+                <div class="speaker-info">
+                    <h3>{{ponencia.idbloque.idponencia.idponente}}</h3>
+                    <p>{{ponencia.idbloque.idponencia}}</p>
+                    <div class="location">
+                        <span class="location-icon">🚩</span>
+                        <span style="margin-top: 4px;">{{ponencia.idbloque.idubicacion}}</span>
+                    </div>
+                </div>
+            </div>
+            <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
+            <div class="card-header">
+                <span class="day">DIA {{ponencia.idbloque.iddia.fecha|date:"d/m/Y"}}</span>
+                <span class="time">{{ponencia.idbloque.horainicio}} - {{ponencia.idbloque.horafin}}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="bottom-section">
+        <div class="left-button">
+            <a class="button profile-button" href="{% url 'Participante' participante.codparticipante %}">
+                <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon">Perfil
+            </a>
+        </div>
+        <div class="center-button">
+            <a class="button presentations-button">
+                <img src="{% static 'images/ponencias.png' %}" alt="Ponencias Icon">Ponencias
+            </a>
+        </div>
+        <div class="right-button">
+            <a href="{% url 'SalirParticipante' %}" class="button exit-button" href="#">
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg"  width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"  preserveAspectRatio="xMidYMid meet">
+                    <g transform="translate(15.000000,512.000000) scale(0.050000,-0.050000)" fill="#A52019" stroke="none"> <path d="M3380 10042 l0 -202 -780 0 -780 0 0 -3960 0 -3960 290 0 290 0 5 3675 5 3675 480 0 480 0 5 -4017 5 -4017 48 12 c27 7 326 62 665 123 340 61 991 177 1447 259 457 82 1006 181 1220 219 215 39 397 71 405 71 8 0 15 1717 15 3817 l0 3816 -415 75 c-439 79 -1359 245 -2565 462 -401 73 -750 137 -775 143 -44 11 -45 9 -45 -191z m812 -4052 c92 -59 141 -288 86 -396 -110 -214 -325 -205 -409 15 -99 261 116 515 323 381z"/></g>
+                </svg>
+                Salir
+            </a>
+        </div>
+    </div>
+</body>
+</html>
