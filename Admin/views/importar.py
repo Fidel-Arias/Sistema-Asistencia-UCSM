@@ -117,12 +117,7 @@ class Generar_QRCode(viewsets.ViewSet):
                 img = qr.make_image(fill_color='black', back_color='white')
 
                 #save img
-                file_path = f"static/qrcodes/{participante.pk}.png"
-                directory = os.path.dirname(file_path)
-                
-                # Verificar si el directorio existe, y si no, crearlo
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
+                file_path = f"/static/qrcodes/{participante.pk}.png"
 
                 #Se guarda la url de la carpeta de su codigo qr del participante
                 participante.qr_code = file_path
