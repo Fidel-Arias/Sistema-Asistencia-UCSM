@@ -43,7 +43,7 @@
             </div>
 
         </form>
-        
+
         {% if archivo_subido %}
         <form action="{% url 'GenerarQRCode' pk %}" method="POST">
             {% csrf_token %}

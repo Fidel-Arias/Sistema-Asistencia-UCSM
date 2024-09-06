@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans:wght@100..900&family=Lilita+One&display=swap');
+
+:root {
+    --letra-Encode-Sans: "Encode Sans", 'Arial', 'Helvetica', sans-serif;
+    --letra-Lilita-One: "Lilita One",'Verdana', 'Geneva', sans-serif;
+}
+
+html {
+    box-sizing: border-box;
+  }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8em !important;
+    overflow: hidden;
+    overflow-y: auto;
+    --opacidad-negro: 0.2;
+    background-image: linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url('../images/universidad_ucsm.jpg');
+    background-size: 190% 120%;
+    background-repeat: no-repeat;
+    background-position-x: 29%;
+}
+
+/*Estilos al Header*/
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.877);
+    gap: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+
+/*Estilos a las imagenes deñ header*/
+.header .img-ucsm {
+    display: none;
+}
+.header .img-epis {
+    display: none;
+}
+.header .img-ucsm-blanco {
+    display: block;
+    width: 100%;
+    min-width: 150px;
+    padding-left: 8px;
+}
+
+.header .img-epis-blanco {
+    display: block;
+    width: 40%;
+    min-width: 90px;
+    padding-right: 15px;
+}
+
+/*Estilos al login Participante*/
+.img-login-bloque {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    max-width: 800px;
+    height: auto;
+    max-height: 100%;
+    align-items: center;
+    border: none;
+    border-radius: 2em;
+    background-color: transparent;
+    justify-content: space-around;
+}
+
+/*Estilos al fondo de la imagen*/
+.image-jinis-universidad {
+    width: 100%;
+    text-align: center;
+    height: auto;
+}
+
+.image-jinis-universidad p {
+    color: white;
+    font-weight: bold;
+    margin-top: 0;
+    text-shadow: 0 0 5px white, -20px 0 20px black, 20px 0 20px black;
+    font-size: 25px;
+    width: auto;
+    margin-bottom: 1em;
+}
+
+.image-jinis-universidad .jinis {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+}
+
+/*Estilos a la sección del formulario*/
+.form-login-bloque, .colaborador-form{
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    background-color: rgba(0, 0, 0, 0.644);
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 1em;
+    width: 60%;
+    min-width: 280px;
+    padding: 1.2em 0.8em 1.4em 0.8em;
+    margin-bottom: 1em;
+}
+
+.form-login-bloque h1 {
+    font-family: var(--letra-Lilita-One);
+    font-weight: 400;
+    font-style: normal;
+    padding-right: 0.2em;
+    margin-bottom: 0.3em;
+    font-size: 28px;
+    width: 100%;
+    min-width: 210px;
+    text-align: center;
+    color: white;
+}
+
+/*Editando el h1 y tamaño para el form del colaborador*/
+
+.colaborador-form h1{
+    margin-top: 0;
+}
+
+.etiqueta {
+    margin-top: 15px;
+}
+
+.form_login {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+/*Blqou icon input*/
+.bloque-icon-input{
+    display: flex;
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+    border-radius: 0.5em;
+    gap: 0.5em;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    background-color: rgba(102, 102, 102, 0.589);
+}
+
+.bloque-icon-input img {
+    height: 20px;
+    opacity: 0.7;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input-box label {
+    font-family: var(--letra-Encode-Sans);
+    font-weight: 600;
+    font-style: normal;
+    font-size: 13px;
+    color: white;
+    margin-bottom: 0.5em;
+}
+
+.input-box label::after {
+    content: '*';
+    margin-left: 3px;
+    color: white;
+    font-weight: bold;
+}
+
+.input-box input {
+    height: 20px;
+    border: none;
+    border-bottom: 2px solid white;
+    outline: none;
+    background-color: rgba(102, 102, 102, 0);
+    color: white;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(241, 241, 241) inset !important;
+    background: none !important;
+}
+
+/*Estilos al boton del form*/
+.form_login button {
+    background-color: rgb(67, 67, 117);
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+/*Estilos a los enlaces de otros login*/
+.enlaces-login {
+    display: flex;
+    gap: 1em;
+    align-self: center;
+}
+.enlaces-login a {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.enlaces-login a:hover {
+    color: rgb(255, 200, 80);
+}

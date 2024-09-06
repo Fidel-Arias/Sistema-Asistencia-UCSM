@@ -16,6 +16,8 @@ from django.contrib import messages
 import qrcode
 import json
 import pandas as pd
+from config import settings
+import os
 
 #Variables locales
 archivo_subido = False
@@ -79,7 +81,6 @@ class Importar_Datos(viewsets.ViewSet):
             messages.success(request, 'Archivo importado y procesado con éxito')
             return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
         else:
-
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
                 'archivo_subido': archivo_subido,
@@ -115,15 +116,16 @@ class Generar_QRCode(viewsets.ViewSet):
                 qr.make(fit=True)
                 img = qr.make_image(fill_color='black', back_color='white')
 
-                # Nombre y path del archivo
+                 # Nombre y path del archivo
                 file_name = f"{participante.pk}.png"
-                file_path = "/home/fidelarias/Sistema-Asistencia-UCSM/qrcodes/"+file_name
+                file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
 
                 # Guardar imagen en la carpeta qrcodes
                 img.save(file_path)
 
                 # Guardar la URL relativa del archivo en la base de datos
-                participante.qr_code = file_path
+                file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
+                participante.qr_code = file_url
                 participante.save()
 
             messages.success(request, 'Códigos QR generado con éxito')

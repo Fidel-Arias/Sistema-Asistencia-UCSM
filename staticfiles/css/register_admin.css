@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Sen:wght@400..800&display=swap');
+:root{
+    --letra-Lexend : "Lexend", sans-serif;
+    --letra-Sen : "Sen", sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../images/UCSM-edificio-portada.webp') no-repeat -280px ;
+    background-size: 1850px 720px;
+    backdrop-filter: blur(3px);
+    overflow: hidden; /* Evita scrolls innecesarios */
+}
+
+.alert-success {
+    position: absolute;
+    top: 3%;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    padding: 1em;
+    background-color: #1dcc43;
+    border-radius: 1em;
+    overflow: hidden;
+    transition: all 1s ease;
+}
+
+.alert-failed {
+    position: absolute;
+    top: 3%;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    padding: 1em;
+    background-color: #db4f36;
+    border-radius: 1em;
+    overflow: hidden;
+    transition: all 1s ease;
+}
+
+.alert-success.top, .alert-failed.top {
+    transform: translateY(-390px);
+}
+
+.alert-success.bottom, .alert-failed.bottom{
+    transform: translateY(0%);
+}
+
+.container {
+    display: flex;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 1s ease;
+}
+
+.container-congreso{
+    display: flex;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 78%;
+    transition: all 1s ease;
+}
+
+.left-panel {
+    display: flex;
+    --opacidad-negro: 0.3;
+    background: linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url('../images/UCSM-edificio-portada.webp') no-repeat -280px center;
+    background-size: cover;
+    width: 650px;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel-title {
+    border-radius: 20px;
+    width: 75%;
+    color: white;
+    font-size: 20px;
+    padding: 35px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.right-panel {
+    padding: 20px;
+    width: 65%;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 40px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-family: var(--letra-Lexend);
+    font-size: 40px;
+    color: #253E85;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    text-shadow: 0 0 5px white, -20px 0 20px black, 20px 0 20px black;
+}
+
+.register-form {
+    padding-left: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 25px;
+}
+
+.alert-error, .alert-error-congreso{
+    display: none;
+    position: absolute;
+    color: red;
+    font-size: 14px;
+    margin: 0;
+    padding: 0 1.5em 0 1.5em;
+}
+
+.alert-error.mostrar, .alert-error-congreso.mostrar {
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    font-family: var(--letra-Sen);
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-group label::after {
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
+}
+
+.input-group input {
+    font-family: var(--letra-Sen);
+    font-size: 11px;
+    padding: 10px;
+    width: 90%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.submit-btn {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.submit-btn img {
+    width: 20px;
+    margin-right: 5px;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-right: 20px;
+    margin-top: 20px;
+    padding-left: 20px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 25px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.back-btn img {
+    transform: scaleX(-1);
+    width: 20px;
+    margin-right: 5px;
+}
+
+.register-btn {
+    background-color: #1d99ff;
+    width: 125px;
+    justify-content: center;
+}
+
+.register-btn:hover {
+    background-color: #0077ff;
+}
+
+.back-btn {
+    background-color: #2ed254;
+}
+
+.back-btn:hover {
+    background-color: #28a745;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin: 40px 0;
+    color: #4D4185;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.step-indicators {
+    width: 25%;
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.step-indicator {
+    width: 45%;
+    height: 5px;
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+.step-indicator.active {
+    background-color: #28a745;
+}
+
+.indications {
+    font-size: 10px;
+    color: #A1A1A1;
+    margin-left: 20px;
+}
+
+.hide-derecha {
+    position: absolute;
+    transform: translateX(150%);
+}
+
+.hide-izquierda {
+    position: absolute;
+    transform: translateX(-150%);
+}
