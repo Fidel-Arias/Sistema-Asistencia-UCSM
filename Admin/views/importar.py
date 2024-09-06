@@ -16,6 +16,7 @@ from django.contrib import messages
 import qrcode
 import json
 import pandas as pd
+import os
 
 #Variables locales
 archivo_subido = False
@@ -117,6 +118,12 @@ class Generar_QRCode(viewsets.ViewSet):
 
                 #save img
                 file_path = f"static/qrcodes/{participante.pk}.png"
+                directory = os.path.dirname(file_path)
+                
+                # Verificar si el directorio existe, y si no, crearlo
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+
                 #Se guarda la url de la carpeta de su codigo qr del participante
                 participante.qr_code = file_path
                 participante.save()
