@@ -91,6 +91,8 @@ class Colaborador(viewsets.ViewSet):
                 return JsonResponse({'status': 'error', 'message': 'El bloque no está disponible'}, status=404)
             except ParticipanteCongreso.DoesNotExist:
                 return JsonResponse({'status': 'error', 'message': 'El participante no está registrado'}, status=404)
+            except Exception:
+                return JsonResponse({'status': 'error', 'message': 'Ocurrió un error'}, status=500)
             except json.JSONDecodeError:
                 return JsonResponse({'status': 'error', 'message': 'QR no válido'}, status=400)
         else:
@@ -99,7 +101,7 @@ class Colaborador(viewsets.ViewSet):
             dia_actual = date.today().strftime('%d/%m/%Y') #Que aparesca segun el dia actual los bloques
             return render(request, 'asistencia_colaborador.html', {
                 'pk': colaborador.pk,
-                'colaborador': colaborador.nombres.capitalize() + ' ' + colaborador.apellidos.capitalize(), 
+                'colaborador': colaborador.nombres.title() + ' ' + colaborador.apellidos.title(), 
                 'bloques': colaborador_bloque, 
                 'congreso': colaborador_bloque.first(),
                 'dia_actual': dia_actual,

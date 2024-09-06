@@ -20,7 +20,7 @@ class viewPonencias(viewsets.ViewSet):
             
             congreso = ParticipanteCongreso.objects.get(codparticipante=pk)
             admin = AdministradorCongreso.objects.get(idcongreso=congreso.idcongreso)
-            bloques = AdministradorBloques.objects.filter(idadministrador = admin.pk)
+            bloques = AdministradorBloques.objects.filter(idadministrador = admin.idadministrador)
             participante = MaeParticipantes.objects.get(pk=pk)
             return render(request, 'ponencias.html', {
                 'ponencias': bloques,

@@ -44,42 +44,52 @@ class Importar_Datos(viewsets.ViewSet):
             except Exception as e:
                 messages.error(request, f'Error al procesar el archivo: {e}')
 
-            datos_participante = []
-            for index, row in df.iterrows():
-                datos_participante.append({
-                    'DNI': row['DNI'],
-                    'AP_PATERNO': row['Ap. Paterno'],
-                    'AP_MATERNO': row['Ap. Materno'],
-                    'NOMBRES': row['Nombres'],
-                    'CORREO': row['Correo'],
-                    'TIPO': row['Tipo'].upper(),
-                })
+            try:
+                datos_participante = []
+                for index, row in df.iterrows():
+                    datos_participante.append({
+                        'DNI': row['DNI'],
+                        'AP_PATERNO': row['Ap. Paterno'],
+                        'AP_MATERNO': row['Ap. Materno'],
+                        'NOMBRES': row['Nombres'],
+                        'CORREO': row['Correo'],
+                        'TIPO': row['Tipo'].upper(),
+                    })
 
-            for dato in datos_participante:
-                agregando_participantes = MaeParticipantes(
-                    codparticipante=dato['DNI'],
-                    ap_paterno=dato['AP_PATERNO'],
-                    ap_materno=dato['AP_MATERNO'],
-                    nombre=dato['NOMBRES'],
-                    correo=dato['CORREO'],
-                    idtipodoc=MaeTipodocumento.objects.get(pk=1),
-                    idtipo=MaeTipoParticipante.objects.get(dstipo=dato['TIPO'])
-                )
-                agregando_participantes.save()
-            archivo_subido = True
-            fs.delete(filename)
+                for dato in datos_participante:
+                    if not MaeParticipantes.objects.filter(pk=dato['DNI']).exists(): #SI EXISTE SOLO ACTUALIZAR SUS DATOS
+                        with transaction.atomic():
+                            agregando_participantes = MaeParticipantes(
+                                codparticipante=dato['DNI'],
+                                ap_paterno=dato['AP_PATERNO'],
+                                ap_materno=dato['AP_MATERNO'],
+                                nombre=dato['NOMBRES'],
+                                correo=dato['CORREO'],
+                                idtipodoc=MaeTipodocumento.objects.get(pk=1),
+                                idtipo=MaeTipoParticipante.objects.get(dstipo=dato['TIPO'])
+                            )
+                            agregando_participantes.save()
+                archivo_subido = True
+                fs.delete(filename)
 
-            #Asociando a la tabla ParticipanteCongreso
-            participantes = MaeParticipantes.objects.all()
-            with transaction.atomic():
-                for participante in participantes:
-                    ParticipanteCongreso.objects.create(
-                        codparticipante=MaeParticipantes.objects.get(pk=participante.pk),
-                        idcongreso=admin_congreso.idcongreso
-                    )
+                #Asociando a la tabla ParticipanteCongreso
+                participantes = MaeParticipantes.objects.all()
+                with transaction.atomic():
+                    for participante in participantes:
+                        if not MaeParticipantes.objects.filter(pk=participante.pk).exists():
+                            ParticipanteCongreso.objects.create(
+                                codparticipante=MaeParticipantes.objects.get(pk=participante.pk),
+                                idcongreso=admin_congreso.idcongreso
+                            )
 
-            messages.success(request, 'Archivo importado y procesado con éxito')
-            return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
+                messages.success(request, 'Archivo importado y procesado con éxito')
+                return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
+
+            except Exception:
+                archivo_subido = False
+                messages.error(request, 'Error en las columnas del archivo')
+                return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
+
         else:
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
@@ -92,49 +102,55 @@ class Generar_QRCode(viewsets.ViewSet):
     def generar_codigo_qrcode(self, request, pk):
         global archivo_subido
         if request.method == 'POST':
-            participantes_congreso = ParticipanteCongreso.objects.all()
-            data = {}
-            for participante_congreso in participantes_congreso:
-                participante = participante_congreso.codparticipante
-                congreso = participante_congreso.idcongreso
-                data = {
-                    'DNI': participante.codparticipante,
-                    'AP_PATERNO': participante.ap_paterno,
-                    'AP_MATERNO': participante.ap_materno,
-                    'NOMBRES': participante.nombre,
-                    'CORREO': participante.correo,
-                    'CONGRESO': congreso.idcongreso
-                }
-                json_data = json.dumps(data)
-                qr = qrcode.QRCode(
-                    version=1,
-                    error_correction=qrcode.constants.ERROR_CORRECT_L,
-                    box_size=10,
-                    border=4,
-                )
-                qr.add_data(json_data)
-                qr.make(fit=True)
-                img = qr.make_image(fill_color='black', back_color='white')
+            try:
+                participantes_congreso = ParticipanteCongreso.objects.all()
+                data = {}
+                for participante_congreso in participantes_congreso:
+                    participante = participante_congreso.codparticipante
+                    congreso = participante_congreso.idcongreso
+                    data = {
+                        'DNI': participante.codparticipante,
+                        'AP_PATERNO': participante.ap_paterno,
+                        'AP_MATERNO': participante.ap_materno,
+                        'NOMBRES': participante.nombre,
+                        'CORREO': participante.correo,
+                        'CONGRESO': congreso.idcongreso
+                    }
+                    json_data = json.dumps(data)
+                    qr = qrcode.QRCode(
+                        version=1,
+                        error_correction=qrcode.constants.ERROR_CORRECT_L,
+                        box_size=10,
+                        border=4,
+                    )
+                    qr.add_data(json_data)
+                    qr.make(fit=True)
+                    img = qr.make_image(fill_color='black', back_color='white')
 
-                 # Nombre y path del archivo
-                file_name = f"{participante.pk}.png"
-                file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
+                    # Nombre y path del archivo
+                    file_name = f"{participante.pk}.png"
+                    file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
 
-                # Guardar imagen en la carpeta qrcodes
-                img.save(file_path)
+                    # Guardar imagen en la carpeta qrcodes
+                    img.save(file_path)
 
-                # Guardar la URL relativa del archivo en la base de datos
-                file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
-                participante.qr_code = file_url
-                participante.save()
+                    # Guardar la URL relativa del archivo en la base de datos
+                    file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
+                    participante.qr_code = file_url
+                    participante.save()
 
-            messages.success(request, 'Códigos QR generado con éxito')
-            archivo_subido = False
-            return render(request, 'pages/importarDatos.html', {
+                messages.success(request, 'Códigos QR generado con éxito')
+                archivo_subido = False
+
+                return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
                 'archivo_subido': archivo_subido,
                 'pk': pk
             })
+            except Exception:
+                messages.error(request, 'Error al generar los códigos QR')
+                archivo_subido = False
+                return redirect(reverse('ImportarDatos', kwargs={'pk': pk}))
         else:
             return redirect('ImportarDatos')
 
