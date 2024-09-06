@@ -1,0 +1,132 @@
+/* Estilo del body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor principal */
+.main-content-reporte {
+    display: flex;
+    flex-direction: column;
+    margin-left: 290px;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    box-sizing: border-box;
+    align-self: center;
+    align-items: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/*Estilos al formulario*/
+
+.formulario{
+    height: auto;
+    width: 50%;
+}
+
+.input-name {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    max-height: 100%;
+    height: 10%;
+    gap: 1em;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 1em;
+}
+
+.input-name label {
+    font-weight: bold;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.input-name label::after{
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
+}
+
+.input-name input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5em;
+    height: auto;
+    font-size: 16px;
+    border-radius: 0.5em;
+    outline: none;
+    border: 1px solid rgb(126, 125, 125);
+}
+
+/*Estilo a los botones*/
+.button-descarga {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    max-height: 45px;
+}
+
+.button {
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+    height: auto;
+    font-size: 16px;
+    border-radius: 0.5em;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button-1{
+    background-color: rgb(51, 157, 255);
+}
+
+.button-2{
+    background-color: rgb(67, 194, 77);
+}
+
+.button-1:hover {
+    background-color: rgb(40, 132, 219);
+}
+
+.button-2:hover {
+    background-color: rgb(46, 175, 34);
+}
+
+/* Media Queries para dispositivos móviles */
+@media (max-width: 1024px) {
+    .button {
+        width: auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .button {
+        width: auto;
+    }
+}
+
+@media(max-width: 1500px){
+    .main-content-reporte {
+        width: 50%;
+    }
+}
