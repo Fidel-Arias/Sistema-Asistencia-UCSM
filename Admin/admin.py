@@ -10,6 +10,7 @@ from .decorators import administrador_login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .generar_token import generar_token
+from django.contrib.auth.hashers import  check_password
 import json
 
 class LoginAdmin(View):
@@ -21,14 +22,17 @@ class LoginAdmin(View):
         correo = request.POST['correo']
         contrasenia = request.POST['contrasenia']
         try:
-            administrador = MaeAdministrador.objects.get(correo=correo, contrasenia=contrasenia)
-            request.session['codadministrador'] = administrador.pk
-            return redirect(reverse('InterfazAdministrador', kwargs={'pk':administrador.pk}))
+            administrador = MaeAdministrador.objects.get(correo=correo)
+            if check_password(contrasenia, administrador.contrasenia):
+                request.session['codadministrador'] = administrador.pk
+                return redirect(reverse('InterfazAdministrador', kwargs={'pk':administrador.pk}))
+            else:
+                request.session['error'] = 'Correo o contraseña incorrectos'
+            return redirect('LoginAdmin')
         except MaeAdministrador.DoesNotExist:
-            request.session['error'] = 'Correo o contraseña incorrectos'
+            request.session['error'] = 'Usuario no registrado'
             return redirect('LoginAdmin')
         except Exception as e:
-            print("Error encontrado: ", e)
             return redirect('LoginAdmin')
         
 class RegisterAdmin(View):

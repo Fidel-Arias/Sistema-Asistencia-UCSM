@@ -11,6 +11,7 @@ from Congreso.models import MaeCongreso
 from tipoUsuario.models import MaeTipousuario
 from Congreso.nuevo_congreso import creando_nuevo_congreso
 from adminMaestros.views import administrador_congreso
+from django.contrib.auth.hashers import make_password
 
 import json
 
@@ -34,6 +35,9 @@ def activar_admin(request): #Encriptar las contraseñas
 
     #Verificar si el admin ya existe
     if not MaeAdministrador.objects.filter(correo=data['correo']).exists():
+
+        #Encriptando la contraseña
+        data['contrasenia'] = make_password(data['contrasenia'],hasher='pbkdf2_sha256')
 
         serializer = AdminSerializer(data=data)
 
