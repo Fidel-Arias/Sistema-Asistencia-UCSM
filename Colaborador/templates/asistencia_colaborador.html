@@ -8,7 +8,7 @@
     <title>Registrar Asistencia</title>
     <link rel="stylesheet" href="{% static 'css/asistencia_colaborador.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
-    <script src="{% static 'plugins/jsQR.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <header class="flex-header">
@@ -16,7 +16,7 @@
         <img src="{% static 'images/epis_logo_blanco.webp' %}" alt="JINIS" class="epis_logo">
     </header>
 
-    <div class="fondo-borroso mostrar" hidden></div>
+    <div class="fondo-borroso fondo-borroso__no-mostrar"></div>
 
     <div class="container">
 
@@ -26,12 +26,48 @@
 
         <h1 class="text-center">Escanear QR Code</h1>
 
-        <video id="cam-video" class="video hidden" autoplay></video>
-        <canvas id="cam-canvas" class="canvas hidden"></canvas>
-
-        <div class="buttons-camera">
-            <button class="btn btn-success" id="btn-cam">Encender Cámara</button>
-            <button class="btn btn-danger" id="btn-stop-cam">Detener Cámara</button>
+        <div class="main_scanner">
+            <main>
+                <div id="reader"></div>
+            </main>
+            <button type="button" id="btnFormRegister" onclick="mostrarFormRegister()">Registrar Participante</button>
+            <form data-url="{% url 'RegistroParticipante' pk %}" class="form-register form-register__no-mostrar" id="form">
+                {% csrf_token %}
+                <h2 style="font-weight: bold;">Registro Participante</h2>
+                <div class="campo-register">
+                    <div class="campo campo_dni">
+                        <label for="dni">DNI</label>
+                        <input type="text" pattern="[0-9]{8}" name="dni" placeholder="Ingrese el DNI" required>
+                    </div>
+                    <div class="campo campo_nombres">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" pattern="^[a-zA-Z\s]+$" name="nombres" placeholder="Ingrese los nombres" required>
+                    </div>
+                    <div class="campo campo-ap_materno">
+                        <label for="ap_paterno">Apellido Paterno</label>
+                        <input type="text" pattern="^[a-zA-Z]+$" name="ap_paterno" placeholder="Ingrese un apellido" required>
+                    </div>
+                    <div class="campo campo-ap_paterno">
+                        <label for="ap_materno">Apellido Materno</label>
+                        <input type="text" pattern="^[a-zA-Z]+$" name="ap_materno" placeholder="Ingrese un apellido" required>
+                    </div>
+                    <div class="campo campo_bloque">
+                        <label for="ap_materno">Elija el bloque actual</label>
+                        <select required name="bloque_register" class="campo" id="bloque_register">
+                            <option selected disabled value="">Elije el bloque actual</option>
+                            {% for bloque in bloques %}
+                                {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
+                                <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="btnRegister">Registrar</button>
+                        <button type="button" class="btnSalir" onclick="salirFormRegister()">Salir</button>
+                    </div>
+                </div>
+            </form>
         </div>
         
         <div class="data">
@@ -43,9 +79,9 @@
 
             <p class="info">Colaborador: <span>{{colaborador}}</span></p>
 
-            <form class="form" style="gap: 0.5em;" method="POST" id="form-json" action="{% url 'InterfazColaborador' pk %}">
+            <form class="form" style="gap: 0.5em;" method="POST" id="form-json" data-url="{% url 'InterfazColaborador' pk %}">
                 {% csrf_token %}
-                <label class="label info" for="inlineFormCustomSelect">Bloque</label>
+                <label class="label info" for="inlineFormCustomSelect">Bloque:</label>
                 <select required name="bloque" class="custom-select" id="inlineFormCustomSelect">
                     <option selected disabled value="">Seleccione el bloque actual</option>
                     {% for bloque in bloques %}
@@ -59,7 +95,7 @@
     </div>
     <audio id="audioScaner" src="{% static 'sound/sonido.mp3' %}"></audio>
 
-    <div class="success-message mostrar" hidden data-warning-img-url="{% static 'images/close.webp' %}" data-success-img-url="{% static 'images/checked.webp' %}">
+    <div class="success-message mostrar-msg" hidden data-warning-img-url="{% static 'images/close.webp' %}" data-success-img-url="{% static 'images/checked.webp' %}">
         <img src="" alt="check" class="success-message__icon icon-checkmark" id="logo_message">
          <h1 class="success-message__title"></h1>
          <div class="success-message__content">
@@ -73,4 +109,5 @@
 </body>
 <script src="{% static 'js/reloj_internet.js' %}"></script>
 <script src="{% static 'js/scanQR.js' %}"></script>
+<script src="{% static 'js/registro_participante.js' %}"></script>
 </html>

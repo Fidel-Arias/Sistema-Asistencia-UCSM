@@ -11,6 +11,7 @@ class MaeParticipantes(models.Model):
     correo = models.CharField(max_length=40)
     idtipodoc = models.ForeignKey(MaeTipodocumento, models.DO_NOTHING, db_column='idtipodoc')
     idtipo = models.ForeignKey(MaeTipoParticipante, models.DO_NOTHING, db_column='idtipo')
+    estado = models.CharField(max_length=13)
     qr_code = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:

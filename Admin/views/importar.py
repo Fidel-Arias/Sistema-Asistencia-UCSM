@@ -66,7 +66,8 @@ class Importar_Datos(viewsets.ViewSet):
                                 nombre=dato['NOMBRES'],
                                 correo=dato['CORREO'],
                                 idtipodoc=MaeTipodocumento.objects.get(pk=1),
-                                idtipo=MaeTipoParticipante.objects.get(dstipo=dato['TIPO'])
+                                idtipo=MaeTipoParticipante.objects.get(dstipo=dato['TIPO']),
+                                estado='REGISTRADO'
                             )
                             agregando_participantes.save()
                 archivo_subido = True
@@ -76,7 +77,7 @@ class Importar_Datos(viewsets.ViewSet):
                 participantes = MaeParticipantes.objects.all()
                 with transaction.atomic():
                     for participante in participantes:
-                        if not MaeParticipantes.objects.filter(pk=participante.pk).exists():
+                        if not ParticipanteCongreso.objects.filter(codparticipante=participante.pk).exists():
                             ParticipanteCongreso.objects.create(
                                 codparticipante=MaeParticipantes.objects.get(pk=participante.pk),
                                 idcongreso=admin_congreso.idcongreso
@@ -130,6 +131,7 @@ class Generar_QRCode(viewsets.ViewSet):
                     # Nombre y path del archivo
                     file_name = f"{participante.pk}.png"
                     file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
+                    # file_path = f'static/qrcodes/{file_name}'
 
                     # Guardar imagen en la carpeta qrcodes
                     img.save(file_path)

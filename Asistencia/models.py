@@ -11,7 +11,6 @@ class TrsAsistencia(models.Model):
     fecha = models.DateField(auto_now_add=True)
     hora = models.TimeField(auto_now_add=True)
     idcongreso = models.ForeignKey(MaeCongreso, models.DO_NOTHING, db_column='idcongreso')
-    estado = models.CharField(max_length=11)
 
     class Meta:
         managed = False
