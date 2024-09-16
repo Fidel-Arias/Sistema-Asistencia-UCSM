@@ -30,7 +30,8 @@ class ReporteAsistencia(viewsets.ViewSet):
                             'AP_PATERNO': asistencia.idpc.codparticipante.ap_paterno,
                             'CONGRESO': asistencia.idbc.idcongreso.nombre,
                             'TIPO': asistencia.idpc.codparticipante.idtipo,
-                            'CANTIDAD DE ASISTENCIA': cantidad_asistencia
+                            'CANTIDAD DE ASISTENCIA': cantidad_asistencia,
+                            'ESTADO': asistencia.idpc.codparticipante.estado
                         })
                         dni_procesados.add(dni)
                 dataframe = pd.DataFrame(data)
@@ -38,7 +39,7 @@ class ReporteAsistencia(viewsets.ViewSet):
                 # Crear un objeto HttpResponse con el tipo de contenido de Excel
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = f'attachment; filename={nombre_archivo}.xlsx'
-                
+
                 # Usar XlsxWriter como motor de pandas ExcelWriter
                 with pd.ExcelWriter(response, engine='xlsxwriter') as writer:
                     dataframe.to_excel(writer, index=False, sheet_name='Asistencia')
@@ -54,4 +55,3 @@ class ReporteAsistencia(viewsets.ViewSet):
                 'pk':admin.idadministrador.idadministrador,
                 'is_there_Data': is_there_Data
             })
-    
