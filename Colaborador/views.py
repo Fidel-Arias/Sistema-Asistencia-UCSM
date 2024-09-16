@@ -123,12 +123,13 @@ class Colaborador(viewsets.ViewSet):
                         participante_no_registrado.save()
                         participante_congreso = ParticipanteCongreso(
                             codparticipante=participante_no_registrado,
-                            idcongreso = BloqueColaborador.objects.get(idcolaborador=pk).idcongreso
+                            idcongreso = BloqueColaborador.objects.filter(idcolaborador=pk).first().idcongreso
                         )
                         participante_congreso.save()
                         generar_qr_code(participante_congreso)
                         bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual)
-                        bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.idcongreso.idcongreso, idbloque=bloque_encontrado) 
+                        bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.
+                        idcongreso.idcongreso, idbloque=bloque_encontrado) 
                         response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado)
                 else:
                     response_data = {
