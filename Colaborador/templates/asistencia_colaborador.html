@@ -53,8 +53,8 @@
                     </div>
                     <div class="campo campo_bloque">
                         <label for="ap_materno">Elija el bloque actual</label>
-                        <select required name="bloque_register" class="campo" id="bloque_register">
-                            <option selected disabled value="">Elije el bloque actual</option>
+                        <select required name="bloque_register" id="bloque_register">
+                            <option selected disabled value="">Bloque actual</option>
                             {% for bloque in bloques %}
                                 {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
                                 <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>
@@ -69,7 +69,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="data">
             <p class="info">Día: <span>{{dia_actual}}</span></p>
 

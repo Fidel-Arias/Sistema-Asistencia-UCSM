@@ -76,8 +76,8 @@ body {
 
 .connect-network p, .disconnect-network p {
     margin: 0 1em 0 1em;
-    font-weight: bold;  
-    color: white; 
+    font-weight: bold;
+    color: white;
 }
 
 /*ESTILOS AL SCANNER*/
@@ -258,6 +258,7 @@ video {
     border-radius: .25rem !important;
     margin-bottom: 1rem !important;
     width: 90% !important;
+    outline: none;
 }
 
 .fondo-borroso {
@@ -307,7 +308,7 @@ video {
     align-items: center;
     justify-content: center;
 }
-  
+
 .success-message__icon {
     max-width: 75px;
 }
@@ -431,12 +432,12 @@ video {
         align-items: center;
         margin: 0;
     }
-    
+
     .ucsm_logo {
         width: 215px;
         height: auto;
     }
-    
+
     .epis_logo {
         width: auto;
         height: 75%;
@@ -445,5 +446,5 @@ video {
     .data p, .label{
         font-size: 20px;
     }
-    
+
 }
