@@ -51,6 +51,7 @@ class Colaborador(viewsets.ViewSet):
         if request.method == 'POST':
             try:
                 data = request.data  # Usar request.data para obtener los datos JSON
+                print(data)
                 qr_data = json.loads(data.get('qr_code'))
                 bloque_actual = json.loads(data.get('bloque'))
                 required_fields = ['DNI', 'AP_PATERNO', 'AP_MATERNO', 'NOMBRES', 'CONGRESO']
@@ -70,15 +71,16 @@ class Colaborador(viewsets.ViewSet):
                 
                 return JsonResponse(response_data)
             except MaeBloque.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'El bloque no existe'}, status=404)
+                return JsonResponse({'title': 'Bloque no encontrado', 'status': 'error', 'message': 'El bloque no existe'}, status=404)
             except BloqueColaborador.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'El bloque no está disponible'}, status=404)
+                return JsonResponse({'title': 'Bloque cerrado', 'status': 'error', 'message': 'El bloque no está disponible'}, status=404)
             except ParticipanteCongreso.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'El participante no está registrado'}, status=404)
+                return JsonResponse({'title': 'Usuario no encontrado', 'status': 'error', 'message': 'El usuario no está registrado'}, status=404)
             except Exception as e:
-                return JsonResponse({'status': 'error', 'message': 'Ocurrió un error'}, status=500)
+                print("Error3:", e)
+                return JsonResponse({'title': 'Error', 'status': 'error', 'message': 'Ocurrió un error'}, status=500)
             except json.JSONDecodeError:
-                return JsonResponse({'status': 'error', 'message': 'QR no válido'}, status=400)
+                return JsonResponse({'title': 'Error', 'status': 'error', 'message': 'QR no válido'}, status=400)
         else:
             colaborador = MaeColaborador.objects.get(pk=pk)
             colaborador_bloque = BloqueColaborador.objects.filter(idcolaborador=colaborador.idcolaborador)
@@ -133,13 +135,37 @@ class Colaborador(viewsets.ViewSet):
                         response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado)
                 else:
                     response_data = {
+                        'title': 'Usuario existente',
                        'status': 'error', 
-                       'message': 'El participante ya existe'
+                       'message': 'El usuario ya existe'
                     }
                 return JsonResponse(response_data)
             except Exception as e:
-                print('Error: ', e)
-                return JsonResponse({'status': 'error', 'message': 'Ocurrió un error'}, status=500)
+                print('Error 2: ', e)
+                return JsonResponse({'title': 'Error', 'status': 'error', 'message': 'Ocurrió un error'}, status=500)
+            
+    @method_decorator(colaborador_login_required)
+    @action(detail=False, methods=['post'])
+    def registrar_participante_por_teclado(self, request, pk):
+        try:
+            data = request.data
+            dni = data['dni']
+            bloque = data['bloque']
+
+            participante = MaeParticipantes.objects.get(pk=dni) #Busca al participante
+            participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante)
+            bloque_actual = MaeBloque.objects.get(pk=bloque) #Busca el bloque seleccionado
+            bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.idcongreso.idcongreso, idbloque=bloque_actual)
+
+            #Registrar Asistencia
+            response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_actual)
+            return JsonResponse(response_data, status=200)
+        except Exception as e:
+            return JsonResponse({'title':'Error', 'status': 'error','message': 'DNI no válido'}, status=400)
+        except MaeParticipantes.DoesNotExist:
+            return JsonResponse({'title': 'Usuario no encontrado', 'status': 'error', 'message': 'El usuario no está registrado'}, status=404)
+        except MaeBloque.DoesNotExist:
+            return JsonResponse({'title': 'Bloque no encontrado', 'status': 'error','message': 'El bloque no existe'}, status=404)
             
 def generar_qr_code(participante_congreso):
     participante = participante_congreso.codparticipante
@@ -185,16 +211,19 @@ def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
             )
             asistencia.save()
             response_data = {
+                'title': 'Asistencia marcada',
                 'status': 'success',
                 'message': 'Registro exitoso'
             }
         else:
             response_data = {
+                'title': 'Bloque Cerrado',
                 'status': 'error', 
                 'message': 'El bloque no está abierto'
             }
     else:
         response_data = {
+            'title': 'Usuario registrado',
             'status': 'warning',
             'message': 'El Registro ya existe'
         }

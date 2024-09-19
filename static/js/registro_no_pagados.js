@@ -1,5 +1,5 @@
 const form = document.querySelector('#form');
-const url = form.getAttribute('data-url');
+const urlForm = form.getAttribute('data-url');
 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 const mensajeFondo = document.querySelectorAll(".mostrar-msg");
 const warningImgUrl = document.querySelector('.success-message').dataset.warningImgUrl;
@@ -19,6 +19,22 @@ function salirFormRegister() {
     fondoBorroso.classList.add('fondo-borroso__no-mostrar');
 }
 
+function mostrarMensaje(titulo, contenido, color, imgUrl) {
+    document.getElementById('logo_message').setAttribute('src', imgUrl);
+    document.querySelector('.success-message__title').innerHTML = titulo;
+    document.querySelector('.success-message__title').style.color = color;
+    document.querySelector('.success-message__content h4').innerHTML = `<b>${contenido}</b>`;
+    mensajeFondo.forEach((elemento) => {
+        elemento.style.display = 'block';
+    });
+
+    setTimeout(() => {
+        mensajeFondo.forEach((elemento) => {
+            elemento.style.display = 'none';
+        });
+    }, 3000);
+}
+
 form.addEventListener('submit', (event) => {
     event.preventDefault();
     const dni = document.querySelector('[name=dni]').value;
@@ -29,7 +45,7 @@ form.addEventListener('submit', (event) => {
     
     salirFormRegister();
     // Enviar formulario al backend
-    fetch(url, {
+    fetch(urlForm, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -45,27 +61,11 @@ form.addEventListener('submit', (event) => {
     })
     .then(response => response.json())
     .then(data => {
-        mensajeFondo.forEach((elemento) => {
-            elemento.style.display = 'block';
-        });
-
         if (data.status === 'success'){
-            document.getElementById('logo_message').setAttribute('src', successImgUrl);
-            document.querySelector('.success-message__title').innerHTML = 'Asistencia marcada';
-            document.querySelector('.success-message__title').style.color = 'green';
-            document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
+            mostrarMensaje(data.title, data.message, 'green', successImgUrl);
         } else if (data.status === 'error') {
-            document.getElementById('logo_message').setAttribute('src', warningImgUrl);
-            document.querySelector('.success-message__title').innerHTML = 'Error';
-            document.querySelector('.success-message__title').style.color ='red';
-            document.querySelector('.success-message__content h4').innerHTML = '<b>'+data['message']+'</b>';
+            mostrarMensaje(data.title, data.message, 'red', warningImgUrl);
         }
-
-        setTimeout(() => {
-            mensajeFondo.forEach((elemento) => {
-                elemento.style.display = 'none';
-            });
-        }, 3000);
 
         form.reset();
 

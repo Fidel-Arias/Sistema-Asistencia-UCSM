@@ -52,11 +52,15 @@ body {
     overflow-y: auto;
 }
 
-.text-center {
+.text-center, .text-secondary {
     text-align: center !important;
-    color: #fff !important;
+    color: #fff;
     margin-top: .5rem !important;
     margin-bottom: .5rem !important;
+}
+
+.text-secondary {
+    color: black;
 }
 
 .connect-network, .disconnect-network{
@@ -80,16 +84,21 @@ body {
     color: white;
 }
 
-/*ESTILOS AL SCANNER*/
-main {
+/*ESTILOS AL SCANNER Y AL REGISTRO MANUAL*/
+.main_scanner, .main_register_manual{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-.main_scanner{
-    text-align: center;
     margin-bottom: 1em;
 }
+.main_scanner-no-mostrar {
+    display: none;
+}
+.main_register_manual-no-mostrar {
+    display: none;
+}
+
 /*Formulario REGISTER PARTICIPANTE*/
 .form-register {
     top: 12%;
@@ -166,79 +175,73 @@ main {
 }
 #btnFormRegister{
     background-color: #2196f3;
-    width: 9em;
-    height: 3em;
-    border-radius: 1em;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
+}
+#btnFormRegister:hover {
+    background-color: #0681e6;
 }
 
+/*ESTILOS AL SCANNER*/
+section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
 #reader {
-    width: 400px;
+    width: 22em;
     border: none !important;
 }
-#result {
-    text-align: center;
-    font-size: 1.5rem;
-}
 video {
-    width: 400px;
+    width: 25em;
     height: 300px;
 }
 #qr-shaded-region {
-    border-width: 50px 70px !important;
+    border-width: 50px 80px !important;
 }
-#html5-qrcode-anchor-scan-type-change {
-    display: none !important;
-}
-#reader img[alt="Info icon"] {
-    display: none;
-}
-#reader__dashboard_section_csr span:nth-child(2){
-    display: flex;
-    flex-direction: column;
+/*ESTILOS A LOS BOTONES*/
+.buttonsCamera {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 100%;
+    row-gap: 1em;
+    column-gap: 0;
+    justify-items: center;
     align-items: center;
-    gap: .5em;
-    color: white;
-    margin-right: 0 !important;
 }
-#reader__dashboard_section_csr span:nth-child(2) select {
-    padding:.5em;
-    text-align: center;
-    width: 60%;
-    border-radius: 5px;
-    border: none;
-    background-color: #f8f9fa;
-    color: #212529;
+#startCamera, #stopCamera, #btnFormRegister, #btnManualRegister {
+    border-radius: .5em;
+    width: 9em;
+    height: 2.5em;
     font-size: 16px;
-    outline: none;
-}
-#reader__dashboard_section_csr button {
-    margin-top: 1em;
-    width: 10em;
-    height: 3em;
-    border-radius: 1em;
-    border: none;
     cursor: pointer;
     color: white;
-    font-weight: bold;
-    font-size: 16px;
+    border: none;
+    transition: transform 0.3s ease-in-out;
 }
-#html5-qrcode-button-camera-start {
-    background-color: #198754;
+#startCamera {
+    background-color: #4CAF50;
 }
-#html5-qrcode-button-camera-stop {
-    background-color: #dc3545;
+#stopCamera {
+    background-color: #f44336;
 }
-#html5-qrcode-button-camera-permission {
-    background-color: #ff0000;
-    margin-bottom: 1em;
+#startCamera:hover {
+    background-color: #3e8e41;
 }
-#reader__header_message{
-    color: white !important;
+#stopCamera:hover {
+    background-color: #d64417;
+}
+#startCamera:active, #stopCamera:active, #btnManualRegister:active, #btnFormRegister:active {
+    transform: scale(0.9);
+}
+
+/*ESTILOS PARA REGISTRO MANUAL*/
+#btnManualRegister {
+    background-color: rgba(253, 213, 33, 0.933);
+}
+#btnManualRegister:hover {
+    background-color: rgb(226, 187, 14);
 }
 
 .info, .label {
