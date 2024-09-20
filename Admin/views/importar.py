@@ -143,12 +143,12 @@ class Generar_QRCode(viewsets.ViewSet):
                     participante.save()
 
                     # Enviar email al participante
-                    status_email = enviar_email_participantes(data, file_path)
-                    if status_email == 'failed':
-                        messages.error(request, f'Error al enviar email al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
-                        continue
-                    else:
-                        messages.success(request, f'Email enviado correctamente al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
+                    #status_email = enviar_email_participantes(data, file_path)
+                    #if status_email == 'failed':
+                        #messages.error(request, f'Error al enviar email al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
+                        #continue
+                    #else:
+                        #messages.success(request, f'Email enviado correctamente al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
 
                 messages.success(request, 'Códigos QR generado con éxito')
                 archivo_subido = False
