@@ -27,7 +27,7 @@ urlpatterns = [
     path('accounts/login/', LoginView.as_view(), name='Login'),  # URL para la vista de inicio de sesión personalizada
     path('accounts/administrador/login-admin/', LoginAdmin.as_view(), name='LoginAdmin'),  # URL para la vista de inicio de sesión personalizada
     path('accounts/administrador/register-admin/', RegisterAdmin.as_view(), name='RegisterAdmin'),
-    path('accounts/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
+    path('accounts/colaborador/login-colaborador/', LoginColaborador.as_view(), name='LoginColaborador'),  # URL para la vista de inicio de sesión personalizada
     path('dashboard/', include('Participantes.urls')),  # Incluye las URLs de la aplicación Participantes    
     path('administrador/dashboard/', include('Admin.urls')),
     path('colaborador/', include('Colaborador.urls')),

@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -60,10 +59,14 @@
                     <div class="campo campo_bloque">
                         <label for="ap_materno">Bloque actual</label>
                         <select required name="bloque_register" id="bloque_register">
-                            <option selected disabled value="">Elije el bloque actual</option>
+                            <option disabled value="" selected>Seleccione el bloque actual</option>
                             {% for bloque in bloques %}
-                                {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
-                                <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>
+                                {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}   
+                                    {% if bloque_selected == bloque.idbloque %}
+                                        <option value="{{bloque.idbloque.idbloque}}" selected>{{bloque.idbloque}}</option>
+                                    {% else %}
+                                        <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option> 
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -97,10 +100,14 @@
                 {% csrf_token %}
                 <label class="label info" for="inlineFormCustomSelect">Bloque:</label>
                 <select required name="bloque" class="custom-select" id="inlineFormCustomSelect">
-                    <option selected disabled value="">Seleccione el bloque actual</option>
+                    <option disabled value="" selected>Seleccione el bloque actual</option>
                     {% for bloque in bloques %}
-                        {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}
-                        <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option>
+                        {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}   
+                            {% if bloque_selected == bloque.idbloque %}
+                                <option value="{{bloque.idbloque.idbloque}}" selected>{{bloque.idbloque}}</option>
+                            {% else %}
+                                <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option> 
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </select>

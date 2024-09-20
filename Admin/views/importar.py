@@ -13,6 +13,7 @@ from tipoParticipante.models import MaeTipoParticipante
 from ParticipanteCongreso.models import ParticipanteCongreso
 from django.db import transaction
 from django.contrib import messages
+from email_service.views import email_service
 import qrcode
 import json
 import pandas as pd
@@ -141,6 +142,14 @@ class Generar_QRCode(viewsets.ViewSet):
                     participante.qr_code = file_url
                     participante.save()
 
+                    # Enviar email al participante
+                    status_email = enviar_email_participantes(data, file_path)
+                    if status_email == 'failed':
+                        messages.error(request, f'Error al enviar email al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
+                        continue
+                    else:
+                        messages.success(request, f'Email enviado correctamente al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
+
                 messages.success(request, 'Códigos QR generado con éxito')
                 archivo_subido = False
 
@@ -156,10 +165,19 @@ class Generar_QRCode(viewsets.ViewSet):
         else:
             return redirect('ImportarDatos')
 
-def enviar_email_participantes(datos_user, img_path):
+def enviar_email_participantes(request, admin_data, datos_user, img_path):
     try:
         template = render_to_string('messages/mail_colaborador.html', {
-
+            'congreso': datos_user['CONGRESO'],
+            'nombres': datos_user['NOMBRES'] + ' ' + datos_user['AP_PATERNO']+ ' ' + datos_user['AP_MATERNO'],
+            'url': 'https://'+settings.ALLOWED_HOSTS[1]
         })
+        plain_message = f"Bienvenido: {datos_user['NOMBRES']} al congreso {datos_user['CONGRESO']} descarga tu código QR o ingresa al siguiente enlace: {'https://'+settings.ALLOWED_HOSTS[1]}"
+
+        subject = f"Bienvenid@ al congreso {datos_user['CONGRESO']}"
+
+        status_email = email_service(request, admin_data, template, plain_message, subject, datos_user['CONGRESO'], img_path)
+
+        return status_email
     except Exception:
         return 'failed'

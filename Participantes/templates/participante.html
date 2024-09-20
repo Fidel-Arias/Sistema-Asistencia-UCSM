@@ -7,32 +7,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/participantes.css' %}">
     <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <title>Perfil del Participante</title>
 </head>
 <body>
-    <div class="container">
-        <div class="top-section">
-            <img src="{% static 'images/logoEPIS.png' %}" alt="imagen" class="top-image-right"></img>
-            <img src="{% static 'images/ucsm_logo_blanco.webp' %}" class="top-image-left"></img>
-            <img src="{% static 'images/logo_jinis2024.webp' %}" alt="imagen" class="top-image2"></img>
-            <img src="{% static 'images/usuario.png' %}" alt="Imagen" class="top-image">
-            <div class="greeting">{{nombre}}</div>
+    <section class="container">
+        <div class="ucsm-logo">
+            <img src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM Logo">
         </div>
-        <div class="middle-section-scroll">
+        <header class="top-section">
+            <div class="bienvenida">
+                <h3>BIENVENIDO A LA</h3>
+                <h1>UCSM</h1>
+            </div>
+        </header>
+        <main class="middle-section-scroll">
             <div class="middle-section">
+                <h1>PERFIL</h1>
+                <div class="greeting">
+                    <img src="{% static 'images/usuario.png' %}" alt="Imagen" class="user-image">
+                    {{nombre}}
+                </div>
+                <div class="attendance">
+                    <div class="attendance-group">
+                        <div class="attendance-count">{{cantidad_asistencia}}</div>
+                        <div class="attendance-text">Asistencia</div>
+                    </div>
+                    <div class="attendance-group">
+                        <div class="attendance-count">{{dia}}</div>
+                        <div class="attendance-text">Dia</div>
+                    </div>
+                </div>
+                <div class="code-text">CODIGO</div>
+                <div class="student-code">
+                    {{participante_data.codparticipante}}</div>    
+                <div class="code-text">ESTADO</div>
+                <div class="student-code">{{participante_data.estado}}</div>  
+                <div class="QR-text">CÓDIGO QR</div>          
                 <div class="QR-code">
                     <img src="{% static participante_qrcode_path %}" alt="QR Code">
                 </div>
-                <div class="attendance-group">
-                    <div class="attendance-text">CANTIDAD DE ASISTENCIAS</div>
-                    <div class="attendance-count">{{cantidad_asistencia}}</div>
-                </div>
-                <div class="attendance-text">CODIGO</div>
-                <div class="student-code">{{participante_data.codparticipante}}</div>            
             </div>
-        </div>
+        </main>
         
-        <div class="bottom-section">
+        <footer class="bottom-section">
             <div class="left-button">
                 <a class="button profile-button">
                     <img src="{% static 'images/perfil.png' %}" alt="Perfil Icon">Perfil
@@ -51,7 +72,7 @@
                     Salir
                 </a>
             </div>
-        </div>
-    </div>
+        </footer>
+    </section>
 </body>
 </html>

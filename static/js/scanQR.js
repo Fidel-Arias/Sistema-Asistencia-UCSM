@@ -121,6 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //FUNCION PARA MOSTRAR LOS MENSAJES DE ALERTA POR UN TIEMPO DETERMINADO
     function mostrarMensaje(titulo, contenido, color, imgUrl) {
+        const fondoBorroso = document.querySelector('.fondo-borroso');
+        fondoBorroso.classList.remove('fondo-borroso__no-mostrar');
         document.getElementById('logo_message').setAttribute('src', imgUrl);
         document.querySelector('.success-message__title').innerHTML = titulo;
         document.querySelector('.success-message__title').style.color = color;
@@ -133,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
             mensajeFondo.forEach((elemento) => {
                 elemento.style.display = 'none';
             });
+            fondoBorroso.classList.add('fondo-borroso__no-mostrar');
         }, 3000);
     }
 

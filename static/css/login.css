@@ -210,21 +210,3 @@ input:-webkit-autofill {
     border-radius: 0.5em;
     cursor: pointer;
 }
-
-/*Estilos a los enlaces de otros login*/
-.enlaces-login {
-    display: flex;
-    gap: 1em;
-    align-self: center;
-}
-.enlaces-login a {
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.enlaces-login a:hover {
-    color: rgb(255, 200, 80);
-}

@@ -6,32 +6,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/ponencias.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Francois+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <title>Ponencias</title>
 </head>
 <body>
-    <h1>PONENCIAS</h1>
+    <header class="top-section">
+        <div class="ucsm-logo">
+            <img src="{% static 'images/ucsm_logo_blanco.webp' %}" alt="UCSM Logo">
+        </div>
+        <h1>BIENVENIDO</h1>
+    </header>
 
-    <div class="card-scroll">
-        {% for ponencia in ponencias %}
-        <div class="card">
-            <div class="card-content">
-                <div class="speaker-info">
-                    <h3>{{ponencia.idbloque.idponencia.idponente}}</h3>
-                    <p>{{ponencia.idbloque.idponencia}}</p>
-                    <div class="location">
-                        <span class="location-icon">🚩</span>
-                        <span style="margin-top: 4px;">{{ponencia.idbloque.idubicacion}}</span>
-                    </div>
-                </div>
-            </div>
-            <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
-            <div class="card-header">
-                <span class="day">DIA {{ponencia.idbloque.iddia.fecha|date:"d/m/Y"}}</span>
-                <span class="time">{{ponencia.idbloque.horainicio}} - {{ponencia.idbloque.horafin}}</span>
+    <main class="middle-section-scroll">
+        <div class="middle-section">
+            <section class="title-section">
+                <p class="title-ponencias">P O N E N C I A S</p>
+            </section>
+            <div class="card-scroll">
+                {% for ponencia in ponencias %}
+                    {% if ponencia.idbloque.iddia.fecha|date:"d/m/Y" == fecha_actual %}
+                        <div class="card">
+                            <div class="card-content">
+                                <h3>{{ponencia.idbloque.idponencia}}</h3>
+                                <span>{{ponencia.idbloque.idponencia.idponente}}</span>
+                                <span >LUGAR: {{ponencia.idbloque.idubicacion}}</span>
+                                <span class="time">HORA: {{ponencia.idbloque.horainicio}} - {{ponencia.idbloque.horafin}}</span>
+                                <span class="day">DIA: {{ponencia.idbloque.iddia.fecha|date:"d/m/Y"}}</span>
+                            </div>
+                            <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
-    </div>
+    </main>
     <div class="bottom-section">
         <div class="left-button">
             <a class="button profile-button" href="{% url 'Participante' participante.codparticipante %}">

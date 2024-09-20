@@ -6,6 +6,7 @@ from Participantes.models import MaeParticipantes
 from adminMaestros.models import AdministradorBloques
 from ParticipanteCongreso.models import ParticipanteCongreso
 from adminMaestros.models import AdministradorCongreso
+from datetime import datetime
 
 # Create your views here.
 class viewPonencias(viewsets.ViewSet):
@@ -17,14 +18,15 @@ class viewPonencias(viewsets.ViewSet):
                 request.session['error'] = 'Acceso inválido'
                 return redirect('Login')  # Redirigir si no está autenticado o si intenta acceder a otro usuario
 
-            
             congreso = ParticipanteCongreso.objects.get(codparticipante=pk)
             admin = AdministradorCongreso.objects.get(idcongreso=congreso.idcongreso)
             bloques = AdministradorBloques.objects.filter(idadministrador = admin.idadministrador)
             participante = MaeParticipantes.objects.get(pk=pk)
+            fecha_actual = datetime.now().strftime('%d/%m/%Y')
             return render(request, 'ponencias.html', {
                 'ponencias': bloques,
-                'participante': participante
+                'participante': participante,
+                'fecha_actual': fecha_actual
             })
         except Exception:
             return render(request, 'ponencias.html')

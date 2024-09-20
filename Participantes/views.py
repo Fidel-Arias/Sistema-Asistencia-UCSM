@@ -7,6 +7,7 @@ from Asistencia.models import TrsAsistencia
 from ParticipanteCongreso.models import ParticipanteCongreso
 from rest_framework import viewsets
 from django.utils.decorators import method_decorator
+from datetime import datetime
 
 class LoginView(View):
     def get(self, request):
@@ -43,12 +44,14 @@ class viewParticipantes(viewsets.ViewSet):
             participante_qrcode_path = participante.qr_code.replace('static/', '')
             cantidad_asistencia = TrsAsistencia.objects.filter(idpc=participante_congreso).count()
             nombreParticipante = participante.nombre.split(' ')
+            dia_actual = datetime.now().day
 
             return render(request, 'participante.html', {
                 'nombre': nombreParticipante[0].capitalize() + ' ' + participante.ap_paterno.capitalize() + ' ' + participante.ap_materno.capitalize(),
                 'participante_data': participante,
                 'participante_qrcode_path':participante_qrcode_path,
-                'cantidad_asistencia':cantidad_asistencia
+                'cantidad_asistencia':cantidad_asistencia,
+                'dia': dia_actual
             })
         except Exception:
             return redirect('Login')

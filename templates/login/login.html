@@ -31,7 +31,7 @@
                     <img src="{% static 'images/icon-key-blanco.png' %}" alt="key" class="key-active">
                     <div class="input-box">
                         <label for="codigo">Código</label>
-                        <input type="password" name="codigo" required placeholder="Ingrese su DNI" />
+                        <input type="password" name="codigo" pattern="[0-9]{8}" required placeholder="Ingrese su DNI" />
                     </div>
                 </div>
                 
@@ -40,10 +40,6 @@
                 {% if error %}
                     <p style="color: red; margin: 0;" id="error">{{ error }}</p>
                 {% endif %}
-    
-                <div class="enlaces-login">
-                    <a href="{% url 'LoginColaborador' %}" class="colaboradorEnlace">Ingresa aqui si eres Colaborador</a>
-                </div>
             </form>
         </div>
     </div>

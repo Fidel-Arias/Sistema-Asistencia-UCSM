@@ -1,16 +1,75 @@
-@font-face {
-    font-family: 'NicoMoji';
-    src: url('/static/fonts/NicoMoji-Regular.ttf') format('truetype');
+.top-section {
+    background: url('../images/william_morris.png'); 
+    background-size: cover;
+    background-position: center -28px;
+    font-family: 'Modak', sans-serif;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    height: 33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: white;
+    padding-bottom: 0px;
 }
 
+.top-section h1 {
+    font-weight: 400;
+    margin: 0;
+    font-size: 40px;
+    margin-top: 245px;
+    line-height: 100px;
+    letter-spacing: 0.07em;
+    text-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.22),  /* Sombra hacia abajo-derecha */
+    -5px -5px 0px rgba(0, 0, 0, 0.22), /* Sombra hacia arriba-izquierda */
+    -5px 5px 0px rgba(0, 0, 0, 0.22),  /* Sombra hacia abajo-izquierda */
+    5px -5px 0px rgba(0, 0, 0, 0.22);
+}
+.ucsm-logo {
+    background-color: #34C759;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.ucsm-logo img {
+    height: 45px;
+    width: 140px;
+}
+.title-section {
+    font-family: 'Francois One', sans-serif;
+    font-size: 30px;
+    background-color: white;
+    text-align: center;
+    padding: 10px 0; /* Reduce el padding para acercar la sección de tarjetas */
+    width: 100%; 
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 0; /* Reduce el espacio inferior entre el título y la tarjeta */
+}
+
+.title-ponencias {
+    font-family: 'Francois One', sans-serif;
+    font-size: 30px; 
+    font-weight: 700;
+    margin: auto;
+    color: black;
+}
+
+
+
 body {
-    font-family: 'NicoMoji', sans-serif;
+    font-family: 'Arimo', sans-serif;
     background-color: #f5f5f5;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0;
-    min-height: 100vh;
+    height: 100vh;
     justify-content: space-between;
 }
 
@@ -23,70 +82,71 @@ h1 {
 }
 
 .card-scroll {
+    margin-top: -10px; /* Acerca aún más las tarjetas */
     height: 80%;
     display: flex;
     flex-direction: column;
-    gap: 1.5em;
+    gap: 1em; /* Ajusta el espacio entre las tarjetas */
     padding: 1em;
     overflow-y: auto;
     width: 97.5%;
     align-items: center;
 }
+.middle-section-scroll {
+    outline: 7px solid rgba(0, 0, 0, 0.4);
+    border-radius: 30px;
+    position: relative;
+    background: white;
+    z-index: 1;
+    margin-top: 200px;
+    overflow-y: auto;
+}
+.middle-section {
+    font-weight: 400;
+    font-style: normal;
+    padding: 13px;
+    text-align: center;
+}
 
 .card {
-    position: relative;
-    background: linear-gradient(90deg, rgba(16,172,193,1) 0%, rgba(6,201,91,1) 100%);
+    margin-top: 0; /* Elimina cualquier margen superior extra de las tarjetas */
+    width: 90%;
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    width: 50%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     box-sizing: border-box;
-}
-
-.card-header {
-    position: inherit;
-    background-color: #037F8C;
-    color: white;
-    padding: 10px;
     display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    z-index: 2;
-}
-
-.card-header .day {
-    font-size: 14px;
-}
-
-.card-header .time {
-    font-size: 14px;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    overflow: hidden;
 }
 
 .card-content {
-    color: #38344D;
+    font-size: 12px;
     width: 70%;
-    padding: 20px;
-    margin-bottom: 75px;
+    padding: 10px;
+}
+
+.card-content h3 {
+    font-family: 'Francois One', sans-serif;
+    margin: 0;
+    font-size: 16px;
+}
+
+.card-content span {
+    display: block;
+    line-height: 1.5;
 }
 
 .speaker-image {
-    position: absolute;
     border-radius: 50%;
-    width: 125px;
-    height: 125px;
-    right: 15px;
-    bottom: 0;
-    z-index: 1;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-left: 10px;
 }
 
-.speaker-info h3 {
-    margin: 0;
-    font-size: 22px;
-}
-
-.speaker-info p {
-    margin: 5px 0;
-    font-size: 12px;
-}
 
 .location {
     display: flex;
@@ -129,10 +189,6 @@ h1 {
     height: 50px;
 }
 
-.button.exit-button {
-    color: #A52019;
-}
-
 .left-button a,
 .center-button a,
 .right-button a {
@@ -144,7 +200,6 @@ h1 {
 @media (max-width: 480px) {
     body{
         width: 100%;
-        color: #38344D;
     }
     .bottom-section {
         display: flex;
@@ -169,12 +224,14 @@ h1 {
         overflow-y: scroll;
         width: 93%;
         align-items: center;
+        margin-bottom: 5em;
     }
     
     .card {
-        background: linear-gradient(90deg, rgba(16,172,193,1) 0%, rgba(6,201,91,1) 100%);
-        border-radius: 15px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background: white;
+        border-radius: 15px;        
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         width: 100%;
         box-sizing: border-box;
     }

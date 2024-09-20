@@ -51,7 +51,6 @@ class Colaborador(viewsets.ViewSet):
         if request.method == 'POST':
             try:
                 data = request.data  # Usar request.data para obtener los datos JSON
-                print(data)
                 qr_data = json.loads(data.get('qr_code'))
                 bloque_actual = json.loads(data.get('bloque'))
                 required_fields = ['DNI', 'AP_PATERNO', 'AP_MATERNO', 'NOMBRES', 'CONGRESO']
@@ -85,12 +84,23 @@ class Colaborador(viewsets.ViewSet):
             colaborador = MaeColaborador.objects.get(pk=pk)
             colaborador_bloque = BloqueColaborador.objects.filter(idcolaborador=colaborador.idcolaborador)
             dia_actual = date.today().strftime('%d/%m/%Y') #Que aparesca segun el dia actual los bloques
+            hora_actual = datetime.now().strftime("%H:%M")
+            bloque_selected = None
+
+            for bloque in colaborador_bloque:
+                minutos = bloque.idbloque.horainicio.minute
+                hora = bloque.idbloque.horainicio.hour
+                if (calcular_diferencia_minutos(hora, minutos).strftime('%H:%M') <= hora_actual and bloque.idbloque.horafin.strftime('%H:%M') >= hora_actual):
+                    bloque_selected = bloque.idbloque
+                    break
+
             return render(request, 'asistencia_colaborador.html', {
                 'pk': colaborador.pk,
                 'colaborador': colaborador.nombres.title() + ' ' + colaborador.apellidos.title(), 
                 'bloques': colaborador_bloque, 
                 'congreso': colaborador_bloque.first(),
                 'dia_actual': dia_actual,
+                'bloque_selected': bloque_selected
             })
         
     @method_decorator(colaborador_login_required)
@@ -201,8 +211,10 @@ def generar_qr_code(participante_congreso):
 
 def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
     hora_actual = datetime.now().strftime("%H:%M")
+    minutos = bloque_encontrado.horainicio.minute
+    hora = bloque_encontrado.horainicio.hour
     if not TrsAsistencia.objects.filter(idpc = participante, idbc = bloqueColaborador).exists():
-        if bloque_encontrado.horainicio.strftime("%H:%M") <= hora_actual and bloque_encontrado.horafin.strftime("%H:%M") >= hora_actual:
+        if (calcular_diferencia_minutos(hora, minutos)).strftime("%H:%M") <= hora_actual and bloque_encontrado.horafin.strftime("%H:%M") >= hora_actual:
             #Registro de asistencia
             asistencia = TrsAsistencia(
                 idpc = participante,
@@ -228,3 +240,18 @@ def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
             'message': 'El Registro ya existe'
         }
     return response_data
+
+def calcular_diferencia_minutos(hora, minuto):
+    minuto_cambiado = 0
+    hora_cambiado = 0
+    reloj_format = '%H:%M'
+    reloj = ''
+    if minuto < 30:
+        minuto_cambiado = (minuto+60)-30
+        hora_cambiado = hora - 1
+    else:
+        minuto_cambiado = minuto - 30
+        hora_cambiado = hora
+    reloj = f'{hora_cambiado}:{minuto_cambiado}'
+    reloj = datetime.strptime(reloj, reloj_format)
+    return reloj
