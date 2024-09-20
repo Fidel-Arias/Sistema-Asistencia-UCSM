@@ -64,8 +64,8 @@ class Colaborador(viewsets.ViewSet):
                 else:
                     participante = ParticipanteCongreso.objects.get(codparticipante=qr_data['DNI'], idcongreso=qr_data['CONGRESO'])
                     bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual) #Corregir para que no se marque despues del bloque
-                    bloqueColaborador = BloqueColaborador.objects.get(idcongreso=qr_data['CONGRESO'], idbloque=bloque_encontrado)
-
+                    bloqueColaborador = BloqueColaborador.objects.filter(idcongreso=qr_data['CONGRESO'], idbloque=bloque_encontrado).first()
+                    #BUSQUEDA POR COLABORADORES
                     response_data = marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado)
                 
                 return JsonResponse(response_data)
@@ -141,7 +141,7 @@ class Colaborador(viewsets.ViewSet):
                         generar_qr_code(participante_congreso)
                         bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual)
                         bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.
-                        idcongreso.idcongreso, idbloque=bloque_encontrado) 
+                        idcongreso.idcongreso, idbloque=bloque_encontrado)
                         response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado)
                 else:
                     response_data = {
