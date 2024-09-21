@@ -165,7 +165,7 @@ LOGIN_URL = '/accounts/login/'  # Ruta de inicio de sesión personalizada
 LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesión
 
 #Sessions Django
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Elimina la sesión al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Elimina la sesión al cerrar el navegador #Preguntar
 # Duración de la sesión en segundos
 SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
 
