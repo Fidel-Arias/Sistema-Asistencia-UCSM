@@ -12,9 +12,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-leba%ve-o$&mt82ntcxb(lttm7i%#8-tp=zjkx@ut=_2t25zb#'
-# SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-leba%ve-o$&mt82ntcxb(lttm7i%#8-tp=zjkx@ut=_2t25zb#')
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,6 +36,8 @@ ALLOWED_HOSTS = ['127.0.0.1',
 
 CSRF_TRUSTED_ORIGINS = ['https://sistemaasistenciaucsm.es', 
                         'https://www.sistemaasistenciaucsm.es']
+
+DOMAIN_URL = 'https://sistemaasistenciaucsm.es'
 
 # CONFIGURACION SSL
 # SECURE_SSL_REDIRECT = True  # Redirige automáticamente a HTTPS
@@ -108,11 +113,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbAsistenciaUCSM',
-        'USER': 'postgres',
-        'PASSWORD': 'Ariasarias_365',
-        'HOST': 'dbucsm-01.cl4c2iycsh1p.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT'),
     }
 }
 
@@ -167,12 +172,14 @@ LOGIN_REDIRECT_URL = '/participante/'  # Redirige aquí después de iniciar sesi
 #Sessions Django
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Elimina la sesión al cerrar el navegador #Preguntar
 # Duración de la sesión en segundos
-SESSION_COOKIE_AGE = 604800  # 2 semanas por defecto
+SESSION_COOKIE_AGE = 345600  # 4 dias por defecto
 
 #SERVIDOR DE CORREO
-EMAIL_PORT = 587
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+
+PASSWORD_ADMIN = env('EMAIL_PASSWORD_ADMIN', default='')

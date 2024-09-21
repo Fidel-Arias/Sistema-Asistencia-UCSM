@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from .generar_token import generar_token
 from django.contrib.auth.hashers import  check_password
 import json
+from config import settings
 
 class LoginAdmin(View):
     def get(self, request):
@@ -25,6 +26,7 @@ class LoginAdmin(View):
             administrador = MaeAdministrador.objects.get(correo=correo)
             if check_password(contrasenia, administrador.contrasenia):
                 request.session['codadministrador'] = administrador.pk
+                request.session['contrasenia_admin'] = contrasenia
                 return redirect(reverse('InterfazAdministrador', kwargs={'pk':administrador.pk}))
             else:
                 request.session['error'] = 'Correo o contraseña incorrectos'
@@ -65,7 +67,7 @@ class RegisterAdmin(View):
 
             subject = f"Registro para administrador en Sistema de Asistencia {formulario_data['nombreCongreso']}"
             
-            status_email = email_service(request, formulario_data, template, plain_message, subject, 'fidel.arias@ucsm.edu.pe')
+            status_email = email_service(request, formulario_data, template, plain_message, subject, ['fidel.arias@ucsm.edu.pe'])
 
             # enviar error de cuenta no existente
             if status_email == 'success':

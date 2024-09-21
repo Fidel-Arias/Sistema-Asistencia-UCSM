@@ -7,23 +7,23 @@ from django.template.loader import render_to_string
 from adminMaestros.models import AdministradorCongreso
 from adminMaestros.models import AdministradorColaborador
 from Admin.models import MaeAdministrador
-from Congreso.models import MaeCongreso
+from tipoUsuario.models import MaeTipousuario
 from Colaborador.models import MaeColaborador
 from Colaborador.forms import ColaboradorForm
 from tipoUsuario.models import MaeTipousuario
 from ..decorators import administrador_login_required
 from email_service.views import email_service
 from django.contrib import messages
+from config import settings
 
 class Registrar_Colaboradores(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def registrar_colaboradores(self, request, pk):
         admin = MaeAdministrador.objects.get(pk=pk)
-        admin_data = {
-                'correo': admin.correo,
-                'contrasenia': admin.contrasenia
+        datos_admin = {
+            'correo': admin.correo,
+            'contrasenia': request.session.get('contrasenia_admin')
         }
-        
         if request.method == 'POST':
             idTipoUsuario = request.POST.get('tipoUsuario')
             nombres = request.POST.get('nombre')
@@ -34,12 +34,12 @@ class Registrar_Colaboradores(viewsets.ViewSet):
             congreso = AdministradorCongreso.objects.get(idadministrador=pk)
 
             colaborador_data = {
-                    'nombres_admin': admin.nombres,
+                    'nombres_admin': admin.nombres + ' ' + admin.apellidos,
                     'nombres': nombres,
                     'apellidos': apellidos,
                     'correo': correo,
                     'contrasenia': contrasenia,
-                    'idTipoUsuario': idTipoUsuario,
+                    'idTipoUsuario': MaeTipousuario.objects.get(pk=idTipoUsuario).dstipo,
                     'nombreCongreso': congreso.idcongreso.nombre
                 }
             
@@ -69,7 +69,7 @@ class Registrar_Colaboradores(viewsets.ViewSet):
                         subject = f"Selección para colaborador en el congreso {colaborador_data['nombreCongreso']}"
                         
                         if template_or_message:
-                            status_email = email_service(request, admin_data, template_or_message[0], template_or_message[1], subject, colaborador_data['correo'])
+                            status_email = email_service(request, datos_admin, template_or_message[0], template_or_message[1], subject, [colaborador_data['correo']])
 
                             if status_email == 'failed':
                                 messages.error(request, 'No se pudo enviar el correo al destino')
@@ -140,12 +140,15 @@ class Registrar_Colaboradores(viewsets.ViewSet):
         
 def crear_template_or_message(request, data_user):
     try:
+        url_colaborador = settings.DOMAIN_URL + reverse('LoginColaborador')
         template = render_to_string('messages/mail_colaborador.html', {
             'nombres_admin': data_user['nombres_admin'],
             'nombre': f"{data_user['nombres']} {data_user['apellidos']}",
             'nombre_congreso': data_user['nombreCongreso'],
             'correo': data_user['correo'],
             'contrasenia': data_user['contrasenia'],
+            'enlace_colaborador': url_colaborador,
+            'Tipo': data_user['idTipoUsuario'],
         })
 
         plain_message = f"Nuevo Colaborador: {data_user['nombres']} {data_user['apellidos']}\nCongreso: {data_user['nombreCongreso']}\nTu Correo: {data_user['correo']}\nTu contraseña: {data_user['contrasenia']}\n"

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
-from Congreso.models import MaeCongreso
+from Admin.models import MaeAdministrador
 from adminMaestros.models import AdministradorCongreso
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
@@ -103,10 +103,16 @@ class Generar_QRCode(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def generar_codigo_qrcode(self, request, pk):
         global archivo_subido
+        admin = MaeAdministrador.objects.get(pk=pk)
+        datos_admin = {
+            'correo': admin.correo,
+            'contrasenia': request.session.get('contrasenia_admin'),
+        }
         if request.method == 'POST':
             try:
                 participantes_congreso = ParticipanteCongreso.objects.all()
                 data = {}
+                correos = []
                 for participante_congreso in participantes_congreso:
                     participante = participante_congreso.codparticipante
                     congreso = participante_congreso.idcongreso
@@ -118,6 +124,7 @@ class Generar_QRCode(viewsets.ViewSet):
                         'CORREO': participante.correo,
                         'CONGRESO': congreso.idcongreso
                     }
+                    correos.append(participante.correo)
                     json_data = json.dumps(data)
                     qr = qrcode.QRCode(
                         version=1,
@@ -142,13 +149,13 @@ class Generar_QRCode(viewsets.ViewSet):
                     participante.qr_code = file_url
                     participante.save()
 
-                    # Enviar email al participante
-                    #status_email = enviar_email_participantes(data, file_path)
-                    #if status_email == 'failed':
-                        #messages.error(request, f'Error al enviar email al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
-                        #continue
-                    #else:
-                        #messages.success(request, f'Email enviado correctamente al participante {participante.nombre} {participante.ap_paterno} {participante.ap_materno}')
+                # Enviar email al participante
+                # admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+                # status_email = enviar_email_participantes(request, datos_admin, correos, file_path, admin_congreso.idcongreso)
+                # if status_email == 'failed':
+                #     messages.error(request, 'Error al enviar email a los participantes')
+                # else:
+                #     messages.success(request, 'Email enviado correctamente a los participantes')
 
                 messages.success(request, 'Códigos QR generado con éxito')
                 archivo_subido = False
@@ -158,25 +165,26 @@ class Generar_QRCode(viewsets.ViewSet):
                 'archivo_subido': archivo_subido,
                 'pk': pk
             })
-            except Exception:
+            except Exception as e:
+                print('Error: ', e)
                 messages.error(request, 'Error al generar los códigos QR')
                 archivo_subido = False
                 return redirect(reverse('ImportarDatos', kwargs={'pk': pk}))
         else:
             return redirect('ImportarDatos')
 
-def enviar_email_participantes(request, admin_data, datos_user, img_path):
+def enviar_email_participantes(request, datos_admin, correos, img_path, congreso):
     try:
-        template = render_to_string('messages/mail_colaborador.html', {
-            'congreso': datos_user['CONGRESO'],
-            'nombres': datos_user['NOMBRES'] + ' ' + datos_user['AP_PATERNO']+ ' ' + datos_user['AP_MATERNO'],
-            'url': 'https://'+settings.ALLOWED_HOSTS[1]
+        url_usuario = settings.DOMAIN_URL
+        template = render_to_string('messages/mail_participantes.html', {
+            'congreso': congreso,
+            'url': url_usuario
         })
-        plain_message = f"Bienvenido: {datos_user['NOMBRES']} al congreso {datos_user['CONGRESO']} descarga tu código QR o ingresa al siguiente enlace: {'https://'+settings.ALLOWED_HOSTS[1]}"
+        plain_message = f"Bienvenido al congreso {congreso} descarga tu código QR o ingresa al siguiente enlace: {url_usuario}"
 
-        subject = f"Bienvenid@ al congreso {datos_user['CONGRESO']}"
+        subject = f"Bienvenid@ al congreso {congreso}"
 
-        status_email = email_service(request, admin_data, template, plain_message, subject, datos_user['CONGRESO'], img_path)
+        status_email = email_service(request, datos_admin, template, plain_message, subject, correos, img_path)
 
         return status_email
     except Exception:
