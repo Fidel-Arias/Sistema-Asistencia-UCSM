@@ -24,8 +24,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-leba%ve-o$&mt82ntcxb(lttm7i%#8-tp=zjkx@ut=_2t25zb#'
- SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -34,7 +33,7 @@ ALLOWED_HOSTS = ['127.0.0.1',
                  'sistemaasistenciaucsm.es',
                  'www.sistemaasistenciaucsm.es']
 
-CSRF_TRUSTED_ORIGINS = ['https://sistemaasistenciaucsm.es', 
+CSRF_TRUSTED_ORIGINS = ['https://sistemaasistenciaucsm.es',
                         'https://www.sistemaasistenciaucsm.es']
 
 DOMAIN_URL = 'https://sistemaasistenciaucsm.es'
