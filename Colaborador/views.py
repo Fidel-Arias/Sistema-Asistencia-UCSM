@@ -17,7 +17,7 @@ from ParticipanteCongreso.models import ParticipanteCongreso
 from Participantes.models import MaeParticipantes
 from tipoDocumento.models import MaeTipodocumento
 from tipoParticipante.models import MaeTipoParticipante
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import qrcode
 import os
 from config import settings
@@ -87,12 +87,17 @@ class Colaborador(viewsets.ViewSet):
             dia_actual = date.today().strftime('%d/%m/%Y') #Que aparesca segun el dia actual los bloques
             hora_actual = datetime.now().strftime("%H:%M")
             bloque_selected = None
+            ubicacion = None
 
             for bloque in colaborador_bloque:
-                minutos = bloque.idbloque.horainicio.minute
-                hora = bloque.idbloque.horainicio.hour
-                if (calcular_diferencia_minutos(hora, minutos).strftime('%H:%M') <= hora_actual and bloque.idbloque.horafin.strftime('%H:%M') >= hora_actual):
+                minuto_inicial = bloque.idbloque.horainicio.minute
+                hora_inicial = bloque.idbloque.horainicio.hour
+                minuto_final = bloque.idbloque.horafin.minute
+                hora_final = bloque.idbloque.horafin.hour
+
+                if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial).strftime('%H:%M') <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime('%H:%M') >= hora_actual):
                     bloque_selected = bloque.idbloque
+                    ubicacion = bloque.idbloque.idubicacion
                     break
 
             return render(request, 'asistencia_colaborador.html', {
@@ -100,6 +105,7 @@ class Colaborador(viewsets.ViewSet):
                 'colaborador': colaborador.nombres.title() + ' ' + colaborador.apellidos.title(), 
                 'bloques': colaborador_bloque, 
                 'congreso': colaborador_bloque.first(),
+                'ubicacion': ubicacion,
                 'dia_actual': dia_actual,
                 'bloque_selected': bloque_selected
             })
@@ -213,11 +219,15 @@ def generar_qr_code(participante_congreso):
     participante.save()
 
 def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
-    hora_actual = datetime.now().strftime("%H:%M")
-    minutos = bloque_encontrado.horainicio.minute
-    hora = bloque_encontrado.horainicio.hour
-    if not TrsAsistencia.objects.filter(idpc = participante, idbc = bloqueColaborador).exists():
-        if (calcular_diferencia_minutos(hora, minutos)).strftime("%H:%M") <= hora_actual and bloque_encontrado.horafin.strftime("%H:%M") >= hora_actual:
+    #Hora y minuto Inicial
+    hora_actual = datetime.now().strftime("%H:%M") #Hora actual
+    minuto_inicial = bloque_encontrado.horainicio.minute
+    hora_inicial = bloque_encontrado.horainicio.hour
+    #Hora y minuto final
+    minuto_final = bloque_encontrado.horafin.minute
+    hora_final = bloque_encontrado.horafin.hour
+    if not TrsAsistencia.objects.filter(idpc = participante, idbc__idbloque = bloqueColaborador.idbloque.pk).exists():
+        if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial)).strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual:
             #Registro de asistencia
             asistencia = TrsAsistencia(
                 idpc = participante,
@@ -244,17 +254,12 @@ def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
         }
     return response_data
 
-def calcular_diferencia_minutos(hora, minuto):
-    minuto_cambiado = 0
-    hora_cambiado = 0
-    reloj_format = '%H:%M'
-    reloj = ''
-    if minuto < 30:
-        minuto_cambiado = (minuto+60)-30
-        hora_cambiado = hora - 1
-    else:
-        minuto_cambiado = minuto - 30
-        hora_cambiado = hora
-    reloj = f'{hora_cambiado}:{minuto_cambiado}'
-    reloj = datetime.strptime(reloj, reloj_format)
-    return reloj
+def calcular_diferencia_minutos_bloque_inicial(hora, minuto):
+    tiempo_inicial = datetime.combine(datetime.today(), datetime.min.time()).replace(hour=hora, minute=minuto)
+    nueva_hora = tiempo_inicial - timedelta(minutes=15)
+    return nueva_hora
+
+def calcular_diferencia_minutos_bloque_final(hora, minuto):
+    tiempo_final = datetime.combine(datetime.today(), datetime.min.time()).replace(hour=hora, minute=minuto)
+    nueva_hora = tiempo_final + timedelta(minutes=15)
+    return nueva_hora
