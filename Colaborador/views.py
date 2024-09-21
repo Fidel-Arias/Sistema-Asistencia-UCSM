@@ -62,9 +62,10 @@ class Colaborador(viewsets.ViewSet):
                         'message': 'QR no válido'
                     }
                 else:
+                    colaborador = MaeColaborador.objects.get(pk=pk)
                     participante = ParticipanteCongreso.objects.get(codparticipante=qr_data['DNI'], idcongreso=qr_data['CONGRESO'])
                     bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual) #Corregir para que no se marque despues del bloque
-                    bloqueColaborador = BloqueColaborador.objects.filter(idcongreso=qr_data['CONGRESO'], idbloque=bloque_encontrado).first()
+                    bloqueColaborador = BloqueColaborador.objects.get(idcongreso=qr_data['CONGRESO'], idbloque=bloque_encontrado, idcolaborador=colaborador)
                     #BUSQUEDA POR COLABORADORES
                     response_data = marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado)
                 
@@ -139,9 +140,10 @@ class Colaborador(viewsets.ViewSet):
                         )
                         participante_congreso.save()
                         generar_qr_code(participante_congreso)
+                        colaborador = MaeColaborador.objects.get(pk=pk)
                         bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual)
                         bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.
-                        idcongreso.idcongreso, idbloque=bloque_encontrado)
+                        idcongreso.idcongreso, idbloque=bloque_encontrado, idcolaborador=colaborador)
                         response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado)
                 else:
                     response_data = {
@@ -163,9 +165,10 @@ class Colaborador(viewsets.ViewSet):
             bloque = data['bloque']
 
             participante = MaeParticipantes.objects.get(pk=dni) #Busca al participante
+            colaborador = MaeColaborador.objects.get(pk=pk)
             participante_congreso = ParticipanteCongreso.objects.get(codparticipante=participante)
             bloque_actual = MaeBloque.objects.get(pk=bloque) #Busca el bloque seleccionado
-            bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.idcongreso.idcongreso, idbloque=bloque_actual)
+            bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.idcongreso.idcongreso, idbloque=bloque_actual, idcolaborador=colaborador)
 
             #Registrar Asistencia
             response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_actual)
