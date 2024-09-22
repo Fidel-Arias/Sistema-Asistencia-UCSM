@@ -104,17 +104,17 @@
                     {% for bloque in bloques %}
                         {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}   
                             {% if bloque_selected == bloque.idbloque %}
-                                <option value="{{bloque.idbloque.idbloque}}" selected>{{bloque.idbloque}}</option>
+                                <option value="{{bloque.idbloque.idbloque}}" data-ubicacion="{{bloque.idbloque.idubicacion.ubicacion}}" selected>{{bloque.idbloque}}</option>
                             {% else %}
-                                <option value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option> 
+                                <option data-ubicacion="{{bloque.idbloque.idubicacion.ubicacion}}" value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option> 
                             {% endif %}
                         {% endif %}
                     {% endfor %}
                 </select>
             </form>
+            <p class="info">Ubicación: <span id="ubicacion_actual">{{ubicacion}}</span></p>
             <p class="info">Día: <span>{{dia_actual}}</span></p>
             <p class="info">Congreso: <span>{{congreso.idcongreso.nombre}}</span></p>
-            <p class="info">Ubicación: <span>{{ubicacion}}</span></p>
             <p class="info">Hora: <span id="reloj">00:00</span></p>
             <p class="info">Colaborador: <span>{{colaborador}}</span></p>
         </div>
@@ -134,7 +134,7 @@
         <a href="{% url 'SalirColaborador' %}" class="nav-link">Cerrar Sesión</a>
     </div>
 </body>
-<script src="{% static 'js/reloj_internet.js' %}"></script>
+<script src="{% static 'js/reloj_internet_ubicacion.js' %}"></script>
 <script src="{% static 'js/scanQR.js' %}"></script>
 <script src="{% static 'js/registro_no_pagados.js' %}"></script>
 <script src="{% static 'js/registro_por_teclado.js' %}"></script>
