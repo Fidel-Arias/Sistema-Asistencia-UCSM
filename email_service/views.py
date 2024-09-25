@@ -25,7 +25,7 @@ def email_service(request, formulario_data, template, plain_message, subject, to
             subject=subject,
             body=plain_message,
             from_email=settings.EMAIL_HOST_USER,
-            to=to_email,
+            to=[to_email],
             connection=connection,  # Utilizar la conexión con las nuevas credenciales
         )
 

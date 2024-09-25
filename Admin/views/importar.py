@@ -104,10 +104,10 @@ class Generar_QRCode(viewsets.ViewSet):
             'contrasenia': request.session.get('contrasenia_admin'),
         }
         if request.method == 'POST':
+            status_email = 'failed'
             try:
                 participantes_congreso = ParticipanteCongreso.objects.all()
                 data = {}
-                correos = []
                 for participante_congreso in participantes_congreso:
                     participante = participante_congreso.codparticipante
                     congreso = participante_congreso.idcongreso
@@ -119,7 +119,6 @@ class Generar_QRCode(viewsets.ViewSet):
                         'CORREO': participante.correo,
                         'CONGRESO': congreso.idcongreso
                     }
-                    correos.append(participante.correo)
                     json_data = json.dumps(data)
                     qr = qrcode.QRCode(
                         version=1,
@@ -144,9 +143,10 @@ class Generar_QRCode(viewsets.ViewSet):
                     participante.qr_code = file_url
                     participante.save()
 
-                # Enviar email al participante
-                admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
-                status_email = enviar_email_participantes(request, datos_admin, correos, file_path, admin_congreso.idcongreso)
+                    # Enviar email al participante
+                    admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+                    status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
+
                 if status_email == 'failed':
                     messages.error(request, 'Error al enviar email a los participantes')
                 else:
