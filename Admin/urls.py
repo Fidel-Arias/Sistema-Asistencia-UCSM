@@ -1,6 +1,6 @@
 from django.urls import path
 from .admin import Cerrar_Sesion
-from .views import colaboradores, congreso, ponentes, bloques, ponencias, ubicacion, bloquesColaborador, reporte, importar, interfaz
+from .views import colaboradores, congreso, ponentes, bloques, ponencias, ubicacion, bloquesColaborador, reporte, importar, interfaz, registrar_asistencia
 
 urlpatterns = [
     path('bienvenido/<int:pk>/', interfaz.Interfaz_Administrador.as_view({'get':'interfaz_administrador'}), name='InterfazAdministrador'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('importar_datos/<int:pk>/', importar.Importar_Datos.as_view({'get':'importar_datos', 'post':'importar_datos'}), name='ImportarDatos'),
     path('generar_qrcode/<int:pk>/', importar.Generar_QRCode.as_view({'get':'generar_codigo_qrcode', 'post':'generar_codigo_qrcode'}), name='GenerarQRCode'),
     path('', Cerrar_Sesion.as_view({'get':'cerrar_sesion'}), name='CerrarSesion'),
+    path('registrar_asistencia/<int:pk>/', registrar_asistencia.Registrar_Asistencia_por_Fallas.as_view({'get':'registrar_asistencia', 'post':'registrar_asistencia'}), name='RegistrarAsistencia'),
 ]

@@ -1,0 +1,181 @@
+/* Estilo del body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor principal */
+.main-container {
+    margin-left: 270px;
+    padding: 20px;
+    width: calc(100% - 320px);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente el contenido */
+    overflow-y: auto; /* Permite desplazamiento si el contenido es demasiado alto */
+    gap: 1em;
+}
+
+/* Estilo del contenedor principal */
+.content-fondo{
+    width: 55%;
+    background-color: #ffffff;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 0 17px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.main-content {
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    width: 80%; /* Ajusta el ancho del recuadro */
+}
+h2{
+    text-align: center;
+    color: rgb(37, 62, 133);
+}
+
+/* Estilo del formulario */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido del formulario */
+}
+
+/* Estilo de las etiquetas del formulario */
+.register-form label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+    text-align: left; /* Alinea las etiquetas a la izquierda */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 100%; /* Máximo ancho disponible */
+}
+
+/* Estilo de los campos de entrada del formulario */
+.register-form input,
+.register-form select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%; /* Ajusta el ancho de los campos de entrada */
+    max-width: 100%; /* Máximo ancho disponible */
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+    font-size: 16px;
+}
+
+/*Estilos a los bloques input*/
+.search-group{
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.search {
+    width: 40%;
+}
+
+.search-group label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+    text-align: left; /* Alinea las etiquetas a la izquierda */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 100%; /* Máximo ancho disponible */
+}
+
+.search-group input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%; /* Ajusta el ancho de los campos de entrada */
+    max-width: 100%; /* Máximo ancho disponible */
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+    font-size: 16px;
+}
+
+/*Estilos al boton search*/
+.btnSearch {
+    max-height: 3em;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: rgb(3, 156, 62);
+    border-radius: .6em;
+}
+
+/* Estilo de los botones */
+.register-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    width: auto;
+}
+
+/*Estilos a los form-group*/
+.form-group {
+    display: flex;
+    gap: 1em;
+}
+
+/*Select Colaborador*/
+.colaborador {
+    max-width: 48.2%;
+}
+
+/* Estilo específico del botón de registro */
+.register-button {
+    background-color: #007bff;
+}
+
+/* Efecto hover para los botones */
+.register-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo de los mensajes */
+.message {
+    margin: 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 90%; /* Ajusta el ancho del mensaje */
+    max-width: 600px; /* Maximo ancho del mensaje */
+    box-sizing: border-box; /* Incluye padding y border en el tamano total */
+}
+
+/* Estilo específico para mensajes de éxito */
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Estilo específico para mensajes de error */
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 1500px) {
+    .button-container {
+        gap: 1em;
+    }
+}

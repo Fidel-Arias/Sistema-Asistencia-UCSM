@@ -6,6 +6,7 @@ class MaePonente(models.Model):
     nombres = models.CharField(max_length=40)
     apellidos = models.CharField(max_length=40)
     estado = models.CharField(max_length=11, default='ACTIVO')
+    url_perfil = models.CharField(max_length=255)
 
     class Meta:
         managed = False

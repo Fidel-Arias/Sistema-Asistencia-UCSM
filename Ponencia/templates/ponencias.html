@@ -39,7 +39,11 @@
                                 <span class="time">HORA: {{ponencia.idbloque.horainicio}} - {{ponencia.idbloque.horafin}}</span>
                                 <span class="day">DIA: {{ponencia.idbloque.iddia.fecha|date:"d/m/Y"}}</span>
                             </div>
-                            <img src="{% static 'images/perfilponente.png' %}" alt="Speaker Image" class="speaker-image">
+                            {% if ponencia.idbloque.idponencia.idponente.url_perfil %}
+                                <img src="{{ponencia.idbloque.idponencia.idponente.url_perfil}}" alt="Speaker Image" class="speaker-image">
+                            {% else %}
+                                <img src="{% static 'images/perfil.png' %}"alt="Speaker Image" class="speaker-image">
+                            {% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}

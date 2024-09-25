@@ -18,15 +18,12 @@ import qrcode
 import json
 import pandas as pd
 from config import settings
+from datetime import datetime
 import os
-
-#Variables locales
-archivo_subido = False
 
 class Importar_Datos(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def importar_datos(self, request, pk):
-        global archivo_subido
         if request.method == 'POST' and request.FILES['file']:
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
@@ -71,7 +68,6 @@ class Importar_Datos(viewsets.ViewSet):
                                 estado='REGISTRADO'
                             )
                             agregando_participantes.save()
-                archivo_subido = True
                 fs.delete(filename)
 
                 #Asociando a la tabla ParticipanteCongreso
@@ -88,21 +84,20 @@ class Importar_Datos(viewsets.ViewSet):
                 return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
 
             except Exception:
-                archivo_subido = False
                 messages.error(request, 'Error en las columnas del archivo')
                 return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
 
         else:
+            existen_participantes = True if MaeParticipantes.objects.filter().exists() else False
             return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
-                'archivo_subido': archivo_subido,
+                'datos_cargados': existen_participantes,
                 'pk': pk
             })
 
 class Generar_QRCode(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def generar_codigo_qrcode(self, request, pk):
-        global archivo_subido
         admin = MaeAdministrador.objects.get(pk=pk)
         datos_admin = {
             'correo': admin.correo,
@@ -150,25 +145,22 @@ class Generar_QRCode(viewsets.ViewSet):
                     participante.save()
 
                 # Enviar email al participante
-                # admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
-                # status_email = enviar_email_participantes(request, datos_admin, correos, file_path, admin_congreso.idcongreso)
-                # if status_email == 'failed':
-                #     messages.error(request, 'Error al enviar email a los participantes')
-                # else:
-                #     messages.success(request, 'Email enviado correctamente a los participantes')
+                admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+                status_email = enviar_email_participantes(request, datos_admin, correos, file_path, admin_congreso.idcongreso)
+                if status_email == 'failed':
+                    messages.error(request, 'Error al enviar email a los participantes')
+                else:
+                    messages.success(request, 'Email enviado correctamente a los participantes')
 
                 messages.success(request, 'Códigos QR generado con éxito')
-                archivo_subido = False
 
                 return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
-                'archivo_subido': archivo_subido,
                 'pk': pk
             })
             except Exception as e:
                 print('Error: ', e)
                 messages.error(request, 'Error al generar los códigos QR')
-                archivo_subido = False
                 return redirect(reverse('ImportarDatos', kwargs={'pk': pk}))
         else:
             return redirect('ImportarDatos')
@@ -180,9 +172,9 @@ def enviar_email_participantes(request, datos_admin, correos, img_path, congreso
             'congreso': congreso,
             'url': url_usuario
         })
-        plain_message = f"Bienvenido al congreso {congreso} descarga tu código QR o ingresa al siguiente enlace: {url_usuario}"
+        plain_message = f"REGISTRO DE ASISTENCIA AL {congreso} Estimado, descargue su código QR adjunto para registrar su asistencia al momento de ingresar a los auditorios donde se realizarán las ponencias. Para más información y ver el estado de su asistencia acceda a la siguiente plataforma con su DNI: {url_usuario}"
 
-        subject = f"Bienvenid@ al congreso {congreso}"
+        subject = f"{congreso} {datetime.now().year} - Registro de Asistencia con QR"
 
         status_email = email_service(request, datos_admin, template, plain_message, subject, correos, img_path)
 

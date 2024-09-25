@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <link rel="icon" href="{% static 'images/JINIS_icon.png' %}" type="image/x-icon">
+    <title>Registrar Asistencia</title>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+    
+    <!-- Sidebar -->
+    {% include 'partials/sidebar.html' %}
+
+    <!-- Contenido principal -->
+    <div class="main-container" id="main">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="content-fondo">
+            <h2>Registrar Asistencia en caso de fallas</h2>
+            <main class="main-content">
+                <div class="search-group">
+                    <div class="search">
+                        <label for="congreso">DNI</label>
+                        <input type="search" name="search_dni" id="search_dni">
+                    </div>
+                    <button type="button" class="btnSearch">
+                        <img src="{% static 'images/search_icon.webp' %}" alt="search">
+                    </button>
+                </div>
+                <form class="register-form reg-bloques" method="POST" action="{% url 'RegistrarAsistencia' pk %}">
+                    <label for="nombres">Nombres</label>
+                    <input type="text" name="nombres">
+                    <div class="form-group">
+                        <div class="group__apPaterno">
+                            <label for="apellidoPaterno">Apellido Paterno</label>
+                            <input type="text" name="apellidoPaterno">
+                        </div>
+                        <div class="group__apMaterno">
+                            <label for="apellidoMaterno">Apellido Materno</label>
+                            <input type="text" name="apellidoMaterno">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="colaborador">
+                            <label for="colaborador">Colaborador</label>
+                            <select name="colaborador" id="colaborador">
+                                <option value="" disabled selected>Seleccione un colaborador</option>
+                                {% for colaborador in colaboradores %}
+                                    {% if colaborador != 'NO ACTIVO' %}   
+                                        <option data-ubicacion="{{colaborador}}" value="{{colaborador}}">{{colaborador.idbloque}}</option> 
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="bloque_actual">
+                            <label for="bloque">Bloque</label>
+                            <select name="bloque" id="bloque">
+                                <option value="" disabled selected>Seleccione un bloque</option>
+                                {% for bloque in bloques %}
+                                    {% if bloque.idbloque.iddia.fecha|date:"d/m/Y" == dia_actual %}   
+                                        <option data-ubicacion="{{bloque.idbloque.idubicacion.ubicacion}}" value="{{bloque.idbloque.idbloque}}">{{bloque.idbloque}}</option> 
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+    
+                    <button type="submit" class="register-button">Registrar Asistencia</button>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

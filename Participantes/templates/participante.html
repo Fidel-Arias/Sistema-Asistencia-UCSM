@@ -31,6 +31,10 @@
                     <img src="{% static 'images/usuario.png' %}" alt="Imagen" class="user-image">
                     {{nombre}}
                 </div>
+                <div class="QR-text">CÓDIGO QR</div>          
+                <div class="QR-code">
+                    <img src="{% static participante_qrcode_path %}" alt="QR Code">
+                </div>
                 <div class="attendance">
                     <div class="attendance-group">
                         <div class="attendance-count">{{cantidad_asistencia}}</div>
@@ -46,10 +50,6 @@
                     {{participante_data.codparticipante}}</div>    
                 <div class="code-text">ESTADO</div>
                 <div class="student-code">{{participante_data.estado}}</div>  
-                <div class="QR-text">CÓDIGO QR</div>          
-                <div class="QR-code">
-                    <img src="{% static participante_qrcode_path %}" alt="QR Code">
-                </div>
             </div>
         </main>
         

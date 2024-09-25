@@ -40,6 +40,10 @@
                 <img src="{% static 'images/datos_icon.webp' %}" alt="importar-icon">
                 <span>Importar y Generar datos</span>
             </a>
+            <a href="{% url 'RegistrarAsistencia' pk %}" id="registrarAsistencia" class="sidebar-colaborador {% if current_page == 'registrar_asistencia' %}active{% endif %} nav">
+                <img src="{% static 'images/bloc-icon.webp' %}" alt="bloc-icon">
+                <span>Registro de Asistencia Manual</span>
+            </a>
         </div>
         <a href="{% url 'CerrarSesion' %}" class="cerrar-sesion">
             <img src="{% static 'images/cerrarSesion.webp' %}" alt="Cerrar sesión">

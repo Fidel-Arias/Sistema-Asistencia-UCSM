@@ -68,10 +68,8 @@ class Colaborador(viewsets.ViewSet):
                     bloque_encontrado = MaeBloque.objects.get(idbloque=bloque_actual) #Corregir para que no se marque despues del bloque
                     bloqueColaborador = BloqueColaborador.objects.get(idcongreso=qr_data['CONGRESO'], idbloque=bloque_encontrado, idcolaborador=colaborador)
                     
-                    #PRIMER BLOQUE
-                    primer_bloque = MaeBloque.objects.filter(iddia__fecha=datetime.now().strftime('%Y-%m-%d')).order_by('horainicio').first()
-
-                    response_data = marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado, primer_bloque)
+                    #MARCAR ASISTENCIA
+                    response_data = marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado)
                 
                 return JsonResponse(response_data)
             except MaeBloque.DoesNotExist:
@@ -96,10 +94,8 @@ class Colaborador(viewsets.ViewSet):
             for bloque in colaborador_bloque:
                 minuto_inicial = bloque.idbloque.horainicio.minute
                 hora_inicial = bloque.idbloque.horainicio.hour
-                minuto_final = bloque.idbloque.horafin.minute
-                hora_final = bloque.idbloque.horafin.hour
 
-                if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial).strftime('%H:%M') <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime('%H:%M') >= hora_actual):
+                if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial).strftime('%H:%M') <= hora_actual and bloque.idbloque.horafin.strftime('%H:%M') >= hora_actual):
                     bloque_selected = bloque.idbloque
                     ubicacion = bloque.idbloque.idubicacion
                     break
@@ -155,9 +151,7 @@ class Colaborador(viewsets.ViewSet):
                         bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.
                         idcongreso.idcongreso, idbloque=bloque_encontrado, idcolaborador=colaborador)
 
-                        #PRIMER BLOQUE
-                        primer_bloque = MaeBloque.objects.filter(iddia__fecha=datetime.now().strftime('%Y-%m-%d')).order_by('horainicio').first()
-                        response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado, primer_bloque)
+                        response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_encontrado)
                 else:
                     response_data = {
                         'title': 'Usuario existente',
@@ -183,11 +177,8 @@ class Colaborador(viewsets.ViewSet):
             bloque_actual = MaeBloque.objects.get(pk=bloque) #Busca el bloque seleccionado
             bloqueColaborador = BloqueColaborador.objects.get(idcongreso=participante_congreso.idcongreso.idcongreso, idbloque=bloque_actual, idcolaborador=colaborador)
 
-            #PRIMER BLOQUE
-            primer_bloque = MaeBloque.objects.filter(iddia__fecha=datetime.now().strftime('%Y-%m-%d')).order_by('horainicio').first()
-
             #Registrar Asistencia
-            response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_actual, primer_bloque)
+            response_data = marcar_Asistencia(participante_congreso, bloqueColaborador, bloque_actual)
             return JsonResponse(response_data, status=200)
         except Exception as e:
             print('Error: ', e)
@@ -229,7 +220,7 @@ def generar_qr_code(participante_congreso):
     participante.qr_code = file_url
     participante.save()
 
-def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado, primer_bloque):
+def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
     #Hora y minuto Inicial
     hora_actual = datetime.now().strftime("%H:%M") #Hora actual
     minuto_inicial = bloque_encontrado.horainicio.minute
@@ -238,46 +229,26 @@ def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado, primer
     minuto_final = bloque_encontrado.horafin.minute
     hora_final = bloque_encontrado.horafin.hour
     if not TrsAsistencia.objects.filter(idpc = participante, idbc__idbloque = bloqueColaborador.idbloque.pk).exists():
-        if bloque_encontrado == primer_bloque:
-            if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial)).strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual:
-                #Registro de asistencia
-                asistencia = TrsAsistencia(
-                    idpc = participante,
-                    idbc = bloqueColaborador,
-                    idcongreso = participante.idcongreso
-                )
-                asistencia.save()
-                response_data = {
-                    'title': 'Asistencia marcada',
-                    'status': 'success',
-                    'message': 'Registro exitoso'
-                }
-            else:
-                response_data = {
-                    'title': 'Bloque Cerrado',
-                    'status': 'error', 
-                    'message': 'El bloque no está abierto'
-                }
+        if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial)).strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual:
+            #Registro de asistencia
+            asistencia = TrsAsistencia(
+                idpc = participante,
+                idbc = bloqueColaborador,
+                idcongreso = participante.idcongreso
+            )
+            asistencia.save()
+            response_data = {
+                'title': 'Asistencia marcada',
+                'status': 'success',
+                'message': 'Registro exitoso'
+            }
         else:
-            if (bloque_encontrado.horainicio.strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual):
-                #Registro de asistencia
-                asistencia = TrsAsistencia(
-                    idpc = participante,
-                    idbc = bloqueColaborador,
-                    idcongreso = participante.idcongreso
-                )
-                asistencia.save()
-                response_data = {
-                    'title': 'Asistencia marcada',
-                    'status': 'success',
-                    'message': 'Registro exitoso'
-                }
-            else:
-                response_data = {
-                    'title': 'Bloque Cerrado',
-                    'status': 'error', 
-                    'message': 'El bloque no está abierto'
-                }
+            response_data = {
+                'title': 'Bloque Cerrado',
+                'status': 'error', 
+                'message': 'El bloque no está abierto'
+            }
+        
     else:
         response_data = {
             'title': 'Usuario registrado',

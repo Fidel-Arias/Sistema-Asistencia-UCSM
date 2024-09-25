@@ -7,7 +7,6 @@
         <p style="color: #555; margin-bottom: 20px;"><strong>{{ nombre_admin }}</strong> ha solicitado ser registrado como administrador para el congreso <strong>{{ nombre_congreso }}</strong> con el siguiente correo <strong>{{ correo }}</strong>.</p>
         <p style="color: #555; margin-bottom: 20px;">Haz clic en el botón de abajo para validar el registro del nuevo administrador.</p>
         <a href="{{protocolo}}://{{dominio}}{% url 'activar_admin' %}?token={{token}}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 16px;">Validar Registro</a>
-        <p>Si no solicitaste esta acción, puedes ignorar este correo.</p>
     </div>
 </body>
 </html>
