@@ -109,43 +109,44 @@ class Generar_QRCode(viewsets.ViewSet):
                 participantes_congreso = ParticipanteCongreso.objects.all()
                 data = {}
                 for participante_congreso in participantes_congreso:
-                    participante = participante_congreso.codparticipante
-                    congreso = participante_congreso.idcongreso
-                    data = {
-                        'DNI': participante.codparticipante,
-                        'AP_PATERNO': participante.ap_paterno,
-                        'AP_MATERNO': participante.ap_materno,
-                        'NOMBRES': participante.nombre,
-                        'CORREO': participante.correo,
-                        'CONGRESO': congreso.idcongreso
-                    }
-                    json_data = json.dumps(data)
-                    qr = qrcode.QRCode(
-                        version=1,
-                        error_correction=qrcode.constants.ERROR_CORRECT_L,
-                        box_size=10,
-                        border=4,
-                    )
-                    qr.add_data(json_data)
-                    qr.make(fit=True)
-                    img = qr.make_image(fill_color='black', back_color='white')
+                    if participante_congreso.codparticipante.qr_code == '' or participante_congreso.codparticipante.qr_code == None:
+                        participante = participante_congreso.codparticipante
+                        congreso = participante_congreso.idcongreso
+                        data = {
+                            'DNI': participante.codparticipante,
+                            'AP_PATERNO': participante.ap_paterno,
+                            'AP_MATERNO': participante.ap_materno,
+                            'NOMBRES': participante.nombre,
+                            'CORREO': participante.correo,
+                            'CONGRESO': congreso.idcongreso
+                        }
+                        json_data = json.dumps(data)
+                        qr = qrcode.QRCode(
+                            version=1,
+                            error_correction=qrcode.constants.ERROR_CORRECT_L,
+                            box_size=10,
+                            border=4,
+                        )
+                        qr.add_data(json_data)
+                        qr.make(fit=True)
+                        img = qr.make_image(fill_color='black', back_color='white')
 
-                    # Nombre y path del archivo
-                    file_name = f"{participante.pk}.png"
-                    file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
-                    # file_path = f'static/qrcodes/{file_name}'
+                        # Nombre y path del archivo
+                        file_name = f"{participante.pk}.png"
+                        file_path = os.path.join(settings.BASE_DIR, 'static/qrcodes', file_name)
+                        # file_path = f'static/qrcodes/{file_name}'
 
-                    # Guardar imagen en la carpeta qrcodes
-                    img.save(file_path)
+                        # Guardar imagen en la carpeta qrcodes
+                        img.save(file_path)
 
-                    # Guardar la URL relativa del archivo en la base de datos
-                    file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
-                    participante.qr_code = file_url
-                    participante.save()
+                        # Guardar la URL relativa del archivo en la base de datos
+                        file_url = f"{settings.STATIC_URL}qrcodes/{file_name}"
+                        participante.qr_code = file_url
+                        participante.save()
 
-                    # Enviar email al participante
-                    admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
-                    status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
+                        # Enviar email al participante
+                        admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
+                        status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
 
                 if status_email == 'failed':
                     messages.error(request, 'Error al enviar email a los participantes')
