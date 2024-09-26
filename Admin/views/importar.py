@@ -51,7 +51,7 @@ class Importar_Datos(viewsets.ViewSet):
                         'AP_MATERNO': row['Ap. Materno'],
                         'NOMBRES': row['Nombres'],
                         'CORREO': row['Correo'],
-                        'TIPO': row['Tipo'].upper(),
+                        'TIPO': row['Tipo'],
                     })
 
                 for dato in datos_participante:
@@ -82,7 +82,6 @@ class Importar_Datos(viewsets.ViewSet):
 
                 messages.success(request, 'Archivo importado y procesado con éxito')
                 return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
-
             except Exception:
                 messages.error(request, 'Error en las columnas del archivo')
                 return redirect(reverse('ImportarDatos', kwargs={'pk':pk}))
@@ -99,6 +98,7 @@ class Generar_QRCode(viewsets.ViewSet):
     @method_decorator(administrador_login_required)
     def generar_codigo_qrcode(self, request, pk):
         admin = MaeAdministrador.objects.get(pk=pk)
+        admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
         datos_admin = {
             'correo': admin.correo,
             'contrasenia': request.session.get('contrasenia_admin'),
@@ -106,19 +106,17 @@ class Generar_QRCode(viewsets.ViewSet):
         if request.method == 'POST':
             status_email = 'failed'
             try:
-                participantes_congreso = ParticipanteCongreso.objects.all()
+                participantes = MaeParticipantes.objects.all()
                 data = {}
-                for participante_congreso in participantes_congreso:
-                    if participante_congreso.codparticipante.qr_code == '' or participante_congreso.codparticipante.qr_code == None:
-                        participante = participante_congreso.codparticipante
-                        congreso = participante_congreso.idcongreso
+                for participante in participantes:
+                    if participante.qr_code == '' or participante.qr_code == None:
                         data = {
                             'DNI': participante.codparticipante,
                             'AP_PATERNO': participante.ap_paterno,
                             'AP_MATERNO': participante.ap_materno,
                             'NOMBRES': participante.nombre,
                             'CORREO': participante.correo,
-                            'CONGRESO': congreso.idcongreso
+                            'CONGRESO': admin_congreso.idcongreso.idcongreso
                         }
                         json_data = json.dumps(data)
                         qr = qrcode.QRCode(
@@ -145,15 +143,14 @@ class Generar_QRCode(viewsets.ViewSet):
                         participante.save()
 
                         # Enviar email al participante
-                        admin_congreso = AdministradorCongreso.objects.get(idadministrador=pk)
                         status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
 
-                if status_email == 'failed':
-                    messages.error(request, 'Error al enviar email a los participantes')
-                else:
-                    messages.success(request, 'Email enviado correctamente a los participantes')
+                # if status_email == 'failed':
+                #     messages.error(request, 'Error al enviar email a los participantes')
+                # else:
+                #     messages.success(request, 'Email enviado correctamente a los participantes')
 
-                messages.success(request, 'Códigos QR generado con éxito')
+                # messages.success(request, 'Códigos QR generado con éxito')
 
                 return render(request, 'pages/importarDatos.html', {
                 'current_page': 'importar_datos',
