@@ -21,7 +21,7 @@ function mostrarMensaje(titulo, contenido, color, imgUrl) {
             elemento.style.display = 'none';
         });
         fondoBorroso.classList.add('fondo-borroso__no-mostrar');
-    }, 1000);
+    }, 900);
 }
 
 // CREACION DE EVENTOS PARA EL FORMULARIO Y EL REGISTRO MANUAL
@@ -30,7 +30,6 @@ btnRegisterManual.addEventListener('click', () => {
     const main_register_manual = document.querySelector('.main_register_manual');
     main_Scanner.classList.add('main_scanner-no-mostrar');
     main_register_manual.classList.remove('main_register_manual-no-mostrar');
-    camaraStop();
 });
 
 btnRegresarScanner.addEventListener('click', () => {
@@ -60,18 +59,21 @@ formRegisterManual.addEventListener('submit', (event) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             if (data.status === 'success') {
                 mostrarMensaje(data.title, data.message, 'green', successImgUrl);
             } else {
                 mostrarMensaje(data.title, data.message, 'red', warningImgUrl);
             }
-            dni_manual.value = '';
+            formRegisterManual.reset();
+            const main_Scanner = document.querySelector('.main_scanner');
+            const main_register_manual = document.querySelector('.main_register_manual');
+            main_register_manual.classList.add('main_register_manual-no-mostrar');
+            main_Scanner.classList.remove('main_scanner-no-mostrar');
         })
         .catch(err => {
             console.error('Error:', err);
             mostrarMensaje('Error', 'Error al intentar registrar', 'red', warningImgUrl);
-            dni_manual.value = '';
+            formRegisterManual.reset();
         })
     } else {
         mostrarMensaje('Espere', 'Selecciona un bloque', 'red', warningImgUrl);

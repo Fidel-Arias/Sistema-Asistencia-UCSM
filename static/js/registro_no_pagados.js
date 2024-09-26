@@ -35,7 +35,7 @@ function mostrarMensaje(titulo, contenido, color, imgUrl) {
             elemento.style.display = 'none';
         });
         fondoBorroso.classList.add('fondo-borroso__no-mostrar');
-    }, 2000);
+    }, 900);
 }
 
 form.addEventListener('submit', (event) => {

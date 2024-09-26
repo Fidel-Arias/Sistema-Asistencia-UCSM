@@ -228,8 +228,9 @@ def marcar_Asistencia(participante, bloqueColaborador, bloque_encontrado):
     #Hora y minuto final
     minuto_final = bloque_encontrado.horafin.minute
     hora_final = bloque_encontrado.horafin.hour
+
     if not TrsAsistencia.objects.filter(idpc = participante, idbc__idbloque = bloqueColaborador.idbloque.pk).exists():
-        if (calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial)).strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual:
+        if calcular_diferencia_minutos_bloque_inicial(hora_inicial, minuto_inicial).strftime("%H:%M") <= hora_actual and calcular_diferencia_minutos_bloque_final(hora_final, minuto_final).strftime("%H:%M") >= hora_actual:
             #Registro de asistencia
             asistencia = TrsAsistencia(
                 idpc = participante,

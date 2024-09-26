@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             isScanning = false;  // Permitir nuevos escaneos
             camaraStart(config, qrCodeSuccessCallBack)
-        }, 3000);
+        }, 1000);
     }
 
     //BOTONES DE INICIAR Y DETENER LA CAMARA
