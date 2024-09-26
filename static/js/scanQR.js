@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formJson = document.getElementById('form-json');
     const url = formJson.getAttribute('data-url');
     const mensajeFondo = document.querySelectorAll(".mostrar-msg");
-    
+
     //CONSTANTES y configuraciones para la camara
     const html5QrCode = new Html5Qrcode(
         "reader", {
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(data);
                     if (data['status'] === 'warning'){
                         mostrarMensaje(data.title, data.message, 'red', warningImgUrl);
-                    } else if (data['status'] === 'error'){ 
+                    } else if (data['status'] === 'error'){
                         mostrarMensaje(data.title, data.message, 'red', warningImgUrl);
                     } else {
                         mostrarMensaje(data.title, data.message, 'green', successImgUrl);
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error('Error:', err);
                 });
             }
-            
+
         } else {
             mostrarMensaje('Error', 'Primero selecciona un bloque', 'red', warningImgUrl);
         }
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         html5QrCode.stop().then(() => {
             console.log('Escaneo detenido.');
         });
-    
+
         setTimeout(() => {
             isScanning = false;  // Permitir nuevos escaneos
             camaraStart(config, qrCodeSuccessCallBack)
@@ -130,13 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeFondo.forEach((elemento) => {
             elemento.style.display = 'block';
         });
-    
+
         setTimeout(() => {
             mensajeFondo.forEach((elemento) => {
                 elemento.style.display = 'none';
             });
             fondoBorroso.classList.add('fondo-borroso__no-mostrar');
-        }, 3000);
+        }, 1000);
     }
 
     //FUNCIONES PARA LOS BOTONES DE INICIO Y DETENCION
@@ -147,6 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
     stopCamera.addEventListener('click', () => {
         camaraStop();
     });
-    
+
 });
 

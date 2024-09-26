@@ -35,7 +35,7 @@ function mostrarMensaje(titulo, contenido, color, imgUrl) {
             elemento.style.display = 'none';
         });
         fondoBorroso.classList.add('fondo-borroso__no-mostrar');
-    }, 3000);
+    }, 2000);
 }
 
 form.addEventListener('submit', (event) => {
@@ -45,7 +45,7 @@ form.addEventListener('submit', (event) => {
     const ap_paterno = document.querySelector('[name=ap_paterno]').value;
     const ap_materno = document.querySelector('[name=ap_materno]').value;
     const bloque = document.querySelector('[name=bloque_register]').value;
-    
+
     salirFormRegister();
     // Enviar formulario al backend
     fetch(urlForm, {

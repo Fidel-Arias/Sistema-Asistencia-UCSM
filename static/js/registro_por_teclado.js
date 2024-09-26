@@ -21,7 +21,7 @@ function mostrarMensaje(titulo, contenido, color, imgUrl) {
             elemento.style.display = 'none';
         });
         fondoBorroso.classList.add('fondo-borroso__no-mostrar');
-    }, 3000);
+    }, 1000);
 }
 
 // CREACION DE EVENTOS PARA EL FORMULARIO Y EL REGISTRO MANUAL
@@ -76,4 +76,4 @@ formRegisterManual.addEventListener('submit', (event) => {
     } else {
         mostrarMensaje('Espere', 'Selecciona un bloque', 'red', warningImgUrl);
     }
-});  
+});
