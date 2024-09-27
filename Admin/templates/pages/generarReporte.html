@@ -38,6 +38,12 @@
                 </div>
                 {% endif %}
             </form>
+
+            <form action="{% url 'EnviarFormulario' %}" method="POST" style="margin-top: 1em;">
+                <label for="link-form">Link del Formulario</label>
+                <input type="text" name="link-form">
+                <button type="submit">Enviar</button>
+            </form>
             
         </main>
 </body>
