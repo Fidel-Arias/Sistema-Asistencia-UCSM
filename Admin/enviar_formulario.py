@@ -6,8 +6,8 @@ from rest_framework import viewsets
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from email_service.views import email_service
-from decorators import administrador_login_required
-from models import MaeAdministrador
+from Admin.decorators import administrador_login_required
+from Admin.models import MaeAdministrador
 from adminMaestros.models import AdministradorCongreso
 from datetime import datetime
 
@@ -27,14 +27,14 @@ class EnviarFormulario(viewsets.ViewSet):
                 for participante in participantes:
                     correo = participante.correo
                     enviar_email_formulario(request, datos_admin, correo, None, admin_congreso.idcongreso.nombre, link_formulario)
-                
+
                 messages.success(request, 'Formulario enviado correctamente a todos los participantes')
                 return redirect(reverse('GenerarReporte', kwargs={'pk':pk}))
             except Exception as e:
                 print('Error: ', e)
                 messages.error(request, 'Error al enviar el formulario a todos los participantes')
                 return redirect(reverse('GenerarReporte', kwargs={'pk':pk}))
-        
+
 
 
 def enviar_email_formulario(request, datos_admin, correos, img_path, congreso, link_formulario):

@@ -15,7 +15,7 @@
 <body>
     <!-- Header -->
     {% include 'partials/header.html' %}
-    
+
     <!-- Sidebar -->
     {% include 'partials/sidebar.html' %}
 
@@ -23,14 +23,14 @@
         <!-- Contenido principal -->
         <main class="main-content-reporte main">
             <h2>Generar Reporte</h2>
-    
+
             <form action="{% url 'GenerarReporte' pk %}" method="POST" class="formulario">
                 {% csrf_token %}
                 <div class="input-name">
                     <label for="input-name">Nombre del archivo</label>
                     <input type="text" name="input-name" id="name" required placeholder="Ingrese un nombre para el archivo">
                 </div>
-                
+
                 {% if is_there_Data %}
                 <div class="button-descarga">
                     <!-- <button type="button" class="button button-1">Ver Reporte</button> -->
@@ -39,12 +39,12 @@
                 {% endif %}
             </form>
 
-            <form action="{% url 'EnviarFormulario' %}" method="POST" style="margin-top: 1em;">
+            <form action="{% url 'EnviarFormulario' pk %}" method="POST" style="margin-top: 1em;">
                 <label for="link-form">Link del Formulario</label>
                 <input type="text" name="link-form">
                 <button type="submit">Enviar</button>
             </form>
-            
+
         </main>
 </body>
 </html>

@@ -1,7 +1,7 @@
 from django.urls import path
 from .admin import Cerrar_Sesion
 from .views import colaboradores, congreso, ponentes, bloques, ponencias, ubicacion, bloquesColaborador, reporte, importar, interfaz, registrar_asistencia
-import enviar_formulario
+from Admin import enviar_formulario
 
 urlpatterns = [
     path('bienvenido/<int:pk>/', interfaz.Interfaz_Administrador.as_view({'get':'interfaz_administrador'}), name='InterfazAdministrador'),
