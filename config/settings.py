@@ -27,9 +27,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',
+                 'localhost',
                  'sistemaasistenciaucsm.es',
                  'www.sistemaasistenciaucsm.es']
 
@@ -39,9 +40,9 @@ CSRF_TRUSTED_ORIGINS = ['https://sistemaasistenciaucsm.es',
 DOMAIN_URL = 'https://sistemaasistenciaucsm.es'
 
 # CONFIGURACION SSL
-SECURE_SSL_REDIRECT = True  # Redirige automáticamente a HTTPS
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True  # Redirige automáticamente a HTTPS
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 
 # Application definition

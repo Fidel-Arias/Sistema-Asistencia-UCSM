@@ -143,7 +143,7 @@ class Generar_QRCode(viewsets.ViewSet):
                         participante.save()
 
                         # Enviar email al participante
-                        status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
+                        # status_email = enviar_email_participantes(request, datos_admin, data['CORREO'], file_path, admin_congreso.idcongreso)
 
                 # if status_email == 'failed':
                 #     messages.error(request, 'Error al enviar email a los participantes')
